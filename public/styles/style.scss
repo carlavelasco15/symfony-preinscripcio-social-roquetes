@@ -1,0 +1,119 @@
+$primary: #2e7d32;
+$secondary: #fcd734;
+$light: #fff;
+$dark: #000;
+$info: #ccc;
+
+$danger: #d9534f;
+$success: #fff;
+$warning: #fff;
+
+$theme-colors: ( "primary": $primary, "secondary": $secondary, "light": $light, "dark": $dark, "info": $info, "danger": $danger);
+
+$primary-light: #60ad5e;
+$primary-dark: #005005;
+$secondary-light: #ffff6b;
+$secondary-dark: #c5a600;
+
+$custom-colors: ( 
+    "primary-light": $primary-light, 
+    "primary-dark": $primary-dark, 
+    "secondary-light": $secondary-light, 
+    "secondary-dark": $secondary-dark);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    margin: 2px;
+    gap: 10px;
+    
+    svg {
+        color: #fff;
+        fill: #fff;
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        svg {
+            color: $dark;
+            fill: $dark;
+        }
+    }
+
+    &:disabled {
+        border-color: $info;
+        background-color: $info;
+        color: #666666;
+    }
+
+    &.disabled {
+        border-color: $info;
+        background-color: $info;
+        color: #666666;
+    }
+}
+
+.btn-primary{
+    &:hover{
+        background-color: $primary-light;
+        border-color: #70b56e;
+        color: $dark;
+        fill: $dark;
+    }
+
+    &:active{
+        background-color: $primary;
+        color: #fff;
+    }
+}
+
+.btn-secondary{
+    svg {
+        color: $dark;
+        fill: $dark;
+    }
+}
+
+.table-text-centered {
+    text-align: center;
+}
+
+tr {
+    vertical-align: middle;
+}
+
+.text-show-1-line {
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    overflow: hidden;
+}
+
+.table-description-3-lines {
+    div {
+        width: 100%;
+        line-height: 24px;
+        height: 49px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+}
+
+.required::after {
+    content: " *";
+    color: $danger;
+}
+
+
+
+
+
+
+
+

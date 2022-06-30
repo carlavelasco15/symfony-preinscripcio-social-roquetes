@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}- Preinscripció social Roquetes{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="stylesheet" href="/styles/style.css">
+        <link rel="stylesheet" href="/styles/navbar.css">
+        {% block jsLinks %}{% endblock %}
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body>
+            <nav class="ps-navbar navbar navbar-expand navbar-dark bg-primary-dark">
+            <div class="container">
+                <div class="d-flex justify-content-end align-items-center w-100">
+                    <div class="d-flex justify-content-between flex-grow-1">
+                        <a class="navbar-brand" href=" {{ path('activity_list') }}">
+                            <img class="nav__logo" src="{{ asset('/res/LogoP-S.png') }}" alt="Logo" />
+                            <h1 class="navbar__title">Nombre Entidad</h1>
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse d-flex justify-content-end">
+                        <ul class="navbar-nav mb-2 mb-lg-0" id="lateral-menu">
+                            <!-- Llista d'activitats -->
+                            <li class="nav-item">
+                                <a class="nav-link my-2 px-3" aria-current="page" href="#">Llista d'activitats</a>
+                            </li>
+                            <!-- Historial de participants -->
+                            <li class="nav-item">
+                                <a class="nav-link my-2 px-3" href="#">Llista de participants</a>
+                            </li>
+                        </ul>
+                        
+
+                        <!-- User register button (Admins only) -->
+                        <div class="ms-5">
+                            <a href="#" class="align-items-center justify-content-center d-flex">
+                                <button type="button" class="btn btn-primary nav-link my-2 px-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Registrar un usuari">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                        <path d="M376 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
+
+                                        <path d="M288 304c-87 0-175.3 48-191.64 138.6-2 10.92 4.21 21.4 15.65 21.4H464c11.44 0 17.62-10.48 15.65-21.4C463.3 352 375 304 288 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M88 176v112M144 232H32" />
+                                    </svg>
+                                </button>
+                            </a>
+                        </div>
+
+
+                        <!-- Log Out button -->
+                        <div>
+                            <a href="#" class="align-items-center justify-content-center d-flex">
+                                <button type="button" class="btn btn-primary nav-link my-2 px-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tancar sessió">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                        <path d="M304 336v40a40 40 0 01-40 40H104a40 40 0 01-40-40V136a40 40 0 0140-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
+                                    </svg>
+                                </button>
+                            </a>
+                        </div>
+
+                        <div class="nav__toggle ms-5" id="" onclick="toggleMenu()">
+                            <div class="nav__toggle-item nav__toggle-lin1"></div>
+                            <div class="nav__toggle-item nav__toggle-lin2"></div>
+                            <div class="nav__toggle-item nav__toggle-lin3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-xl my-5">
+            {% block main %}{% endblock %}
+        </div>
+        
+    </body>
+</html>

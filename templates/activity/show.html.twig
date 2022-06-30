@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DefaultController!{% endblock %}
+
+{% block main %}
+    <h2>{{activity.name}}</h2>
+
+
+
+    <div class="box row my-5 p-5 align-items-center border">
+        <div class="col-5">
+            <h3 class="mb-4">Dades de l'activitat</h3>
+            <h5>Informació general</h5>
+            <p class="mb-1 mx-3"><b>Places:</b> 3 places lliures / llista d'espera</p>
+            <p class="mb-1 mx-3"><b>Cost:</b> de franc</p>
+            <p class="mb-1 mx-3"><b>Lloc:</b> AFEGIR LOCALITZACIÓ ACTIVITAT</p>
+            <hr>
+            <h5>Categories</h5>
+            <p class="mb-1 mx-3"><b>Grup d'edat:</b> adults</p>
+            <p class="mb-1 mx-3"><b>Categoria:</b> físiques i relaxació</p>
+            <hr>
+            <h5>Horaris</h5>
+            <p class="mb-1 mx-3"><b>Data i franja horaria:</b> {{ activity.startDate|date('d/m/Y') }} - {{ activity.endDate|date('d/m/Y') }}</p>
+            <p class="mb-1 mx-3"><b>Horiari:</b> dilluns de 10:30 a 11:30</p>
+            <p class="mb-1 mx-3">(Els horaris poden estar subjectes a canvi.)</p>
+            <hr>
+            <h5>Tallerista</h5>
+            <p class="mb-1 mx-3"><b>Tallerista:</b> {{ activity.worker }}</p>
+            <p class="mb-1 mx-3"><b>Contacte tallerista (si escau):</b> {{ activity.worker }}</p>
+            <hr>
+            {% if activity.description %}
+                <h5>Més informació</h5>
+                <p class="mb-1 mx-3">Espais de convivència i suport mutu per afavorir la salut emocional i social a través de la cuina Dimarts, dimecres o divendres matí</p>
+                <hr>
+            {% endif %}
+        </div>
+        <img src="{{
+                    asset(activity.picture ? 
+                        path('activity_picture', {'picture': activity.picture}) :
+                        path('activity_picture', {'picture': 'default.png'})) 
+                    }}" class="col-7" 
+                    style="object-fit:contain;max-height:350px" 
+                    alt="Imagen de {{activity.name}}"
+                    title="Imagen de {{activity.name}}">
+    </div>
+
+
+
+
+    <div class="box row my-5 p-5 align-items-center border">
+        <div class="col-5 align-self-start">
+            <h3 class="mb-4">Dades del centre</h3>
+            <p class="mb-1">Centre Ton i Guida</p>
+            <p class="mb-1">Carrer de Romaní, 6</p>
+            <p class="mb-1">933 54 87 21</p>
+            <p class="mb-1">info@toniguida.cat</p>
+            <p class="mb-1">BARCELONA</p>
+            <hr>
+            <h5>Horari</h5>
+            <p class="mb-1 mx-3">de dilluns a divendres de 9:00 a 13:00 i de 15:00 a 18:00</p>
+            <p class="mb-1 mx-3">dissabtes de 9:00 a 15:00</p>
+        </div>
+        <img src="https://www.redaccionmedica.com/images/centros_de_salud/centro-de-atencion-primaria-cap-roquetes-canteres.jpg" 
+                    class="col-7 text-align-center" 
+                    style="object-fit:contain;max-height:350px" 
+                    alt="Imagen de {{activity.name}}"
+                    title="Imagen de {{activity.name}}">
+        </div>
+
+
+
+
+    <div class="box row my-5 p-5 align-items-center border">
+                <h3 class="mb-4">Crea un tiquet</h3>
+                    <div class="mx-3">
+                        <div class="col-8">
+                            <h5>Participant antic</h5>
+                            <p>Crea un tiquet per a un participant que ja estiqui registrat al sistema.</p>
+                        </div>
+                        <div class="col-8">
+                            <h5>Nou participant</h5>
+                            <p>Crea un tiquet per a un participant que encara no està inscrit al sistema.</p>
+                        </div>
+                        
+                    </div>
+                <div class="row justify-content-center align-content-center">
+
+                    <form class="row g-3 col-8 text-start" action="./controllers/ticket_crud.php" method="POST">
+                        
+                        <input type="hidden" name="activity_id" value="70">
+                        <input type="hidden" name="equipment_id" value="3">
+
+                        <div class="col-md-6">
+                            <label for="participant_name" class="form-label px-1 required">Nom i cognoms</label>
+                            <input type="text" class="form-control px-3 py-2" name="participant_name" id="participant_name" required="">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="participant_phone" class="form-label px-1 required">Telèfon</label>
+                            <input type="text" class="form-control px-3 py-2" minlength="9" maxlength="9" name="participant_phone" id="participant_phone" required="">
+                        </div>
+
+                        <div class="col-6">
+                            <label for="participant_dni" class="form-label px-1 required">DNI</label>
+                            <input type="text" class="form-control px-3 py-2" name="participant_dni" id="participant_dni" minlength="9" maxlength="9" required="">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="participant_email" class="form-label px-1">Correu electrònic</label>
+                            <input type="email" class="form-control px-3 py-2" name="participant_email" id="participant_email">
+                        </div>
+
+                        <div class="col-md-12 mt-4">
+                            <label class="form-label px-1" for="description">Comentaris sobre el participant</label>
+                            <textarea class="form-control px-3 py-2" type="text" name="participant_comment" id="description" cols="30" rows="5"></textarea>
+                        </div>
+
+                        <div class="col-md-12 mt-4">
+                            <div class="d-flex align-items-start mb-3">
+                                <input type="checkbox" id="proteccio_dades" name="proteccio_dades" value="acepto">
+                                <label id="consentiment">En cas d'haver proporcionat una <b>adreça de correu electrònic i deixar com a marcada aquesta casella</b>, el participant dona consentiment per rebre notificacións via email en els següentes casos:</label>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 col-12 text-center">
+                            <button type="submit" class="btn btn-primary" name="ticket-insert">Crear tiquet</button>
+                        </div>
+
+                    </form>
+
+                </div>
+    </div>
+
+
+
+{% endblock %}

@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.admin_email: "%env(ADMIN_EMAIL)%"
+
+    app.activity_images: /resources/images/activities
+    app.activity_images.root: "%kernel.project_dir%/%app.activity_images%"
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +23,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Services\FileService:
+        arguments:
+            $targetDirectory: '%app.activity_images.root%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
