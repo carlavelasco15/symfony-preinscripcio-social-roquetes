@@ -47,11 +47,6 @@ class Activity
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $session_count;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
     private $places_total;
 
     /**
@@ -188,18 +183,6 @@ class Activity
         return $this;
     }
 
-    public function getSessionCount(): ?int
-    {
-        return $this->session_count;
-    }
-
-    public function setSessionCount(int $session_count): self
-    {
-        $this->session_count = $session_count;
-
-        return $this;
-    }
-
         /**
      * Get the value of places_taken
      */ 
@@ -324,7 +307,7 @@ class Activity
         return $this;
     }
 
-    public function getCategoriy(): ?Category
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
