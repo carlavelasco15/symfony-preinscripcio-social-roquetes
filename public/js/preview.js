@@ -58,12 +58,9 @@ document.getElementById("activity_form_weekday").onchange = function(e) {
         });
 
         console.log(result);
-        document.getElementById('totalSessions').innerHTML = result.length;
-        document.getElementById('dayTable').innerHTML= arrayToTable(result);
+        arrayToTable(result,2);
     }
 }
-
-
 
 function arrayToTable(array, numColumnas = 3) {
     var tableHTML = '';
