@@ -15,6 +15,39 @@
 
 </style>
 
+<script>
+
+    function createCalendarHeader(idTable, idName) {      
+         var htmlHeader= `<div class="container border d-flex">
+                           <table class="text-center table-bordered table my-5" style="width:400px; margin: 0 auto;">
+                              <thead class="thead-dark" >
+                                 <tr>
+                                    <th colspan="7"><span id="month-${idTable}"></span> <span id="year-${idTable}"></span></th>
+                                 </tr>
+                                 <tr>
+                                    <th>dl</th>
+                                    <th>dm</th>
+                                    <th>dc</th>
+                                    <th>dj</th>
+                                    <th>dv</th>
+                                    <th>ds</th>
+                                    <th>dg</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="table-body-${idTable}"></tbody>
+                           </table>
+                        `;
+         window.onload = function() {
+            document.getElementById("" + idName + "").innerHTML = htmlHeader;
+         }
+         return idTable;
+      }
+
+      createCalendarHeader(3, "prova");
+
+</script>
+<div id="prova"></div>
+
 
 <div class="container border d-flex">
    <table class="text-center table-bordered table my-5" style="width:400px; margin: 0 auto;">
@@ -39,13 +72,13 @@
 
       function createCalendar(fechaInicio, fechaFin, diaSemana) {
          //buscar numero de meses entre las dos fechas
+
+
           
       }
 
 
-      function createCalendarHeader() {
-
-      }
+     
 
       function createCalendarBody() {
 

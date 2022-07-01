@@ -20,41 +20,45 @@ document.getElementById("activity_form_end_date").onchange = function(e) {
 document.getElementById("activity_form_weekday").onchange = function(e) {   
     WEEKDAY = dayToNumber(document.getElementById("activity_form_weekday").value);
     if(START_DATE && END_DATE) {
-        var sessions = calculateSessions(START_DATE, END_DATE, WEEKDAY);
+        var sessions = calculateSessions(START_DATE, END_DATE, [1, 4, 3]);
         var arrayPretty = i18nDateCatalan(sessions);
-        console.log(i18nDateUSA(sessions));
         arrayToSimpleTable(arrayPretty, 2); 
     }
 }
 
-const diesSetmana = ['dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte', 'diumenge'];
+/* const diesSetmana = ['dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte', 'diumenge'];
 const array = startActivity.split('-');
 const [any, mes, dia] = array
-console.log(dia)
+console.log(dia) */
 
-
+calculateSessions("2022-07-01", "2022-07-30", [3,5]);
 
 function calculateSessions(startActivity, endActivity, weekday) {
-
-    var start = moment(startActivity),
-        end = moment(endActivity),
-        day = weekday; 
-
+        var start = moment(startActivity),
+            end = moment(endActivity);
         var result = [];
-        var current = start.clone();
-        
-        while (current.day(7 + day).isBefore(end)) {
-            result.push(current.clone());
-        }
-        
-      /*   result.forEach((element, index) => {
-            if(index == 0) result = [];
-            result.push(element.format('L'));
-            resultPretty.push(element.locale('ca').format('dddd') + '<br>' + element.locale('ca').format('L'));
-        }); */
+        var days = [];
 
-        return result;
-}
+        if (typeof weekday == "object") {
+            days = weekday; 
+        } else if (typeof weekday == "number") {
+            days[0] = weekday;
+        }
+  
+        days.forEach(day => {
+            var current = start.clone();
+            while (current.day(7 + day).isBefore(end)) {
+                result.push(current.clone());
+            }
+        });
+
+        let sortedResult = result.sort(function(a, b){
+            return moment(a).format('X')-moment(b).format('X')
+        });
+
+        return sortedResult;
+    }
+
 
 function i18nDateCatalan(array) {
     var result = [];
@@ -77,13 +81,6 @@ function i18nDateUSA(array) {
     return result;
 }
 
-/*     result.forEach((element, index) => {
-        if(index == 0) resultPretty = [];
-        resultPretty.push(element.locale('ca').format('dddd') + '<br>' + element.locale('ca').format('L'));
-    });
-}
- */
-
 
 function dayToNumber(dayName) {
     var days = {dill:1,dima:2,dime:3,dijo:4,dive:5,diss:6,dium:7};
@@ -97,7 +94,7 @@ function arrayToSimpleTable(array, numColumnas = 3) {
     array.forEach((value, index) => { 
         if(index == 0) 
             tableHTML += '<tr>';
-        
+
         tableHTML += '<td class="text-capitalize">' + value + '</td>';
     
         if(array.length - 1 == index) {
@@ -107,10 +104,20 @@ function arrayToSimpleTable(array, numColumnas = 3) {
         }  
     });
 
+    //totalTableSessions
+    //
     document.getElementById('totalSessions').innerHTML = array.length;
     document.getElementById('dayTable').innerHTML= tableHTML;
 }
 
+/* function createSimpleTableBody(array, numColumnas = 3) {
+
+}
+
+function createSimpleTableHeader() {
+
+}
+ */
 
 
 

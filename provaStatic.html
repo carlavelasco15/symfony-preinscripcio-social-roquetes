@@ -1,0 +1,99 @@
+<script>
+    class DateManager {
+        static instanceCounter = 1;
+        id;
+        startDate;
+        endDate;
+        weekdays;
+
+        constructor(startDate, endDate, weekdays) {
+
+            this.id = DateManager.instanceCounter++;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.weekdays = weekdays;
+
+        }
+
+        createCalendarHeader() {      
+            var htmlHeader= `<div class="container border d-flex">
+                            <table class="text-center table-bordered table my-5" style="width:400px; margin: 0 auto;">
+                                <thead class="thead-dark" >
+                                    <tr>
+                                        <th colspan="7"><span id="month-object${this.id}"></span> <span id="year-object${this.id}"></span></th>
+                                    </tr>
+                                    <tr>
+                                        <th>dl</th>
+                                        <th>dm</th>
+                                        <th>dc</th>
+                                        <th>dj</th>
+                                        <th>dv</th>
+                                        <th>ds</th>
+                                        <th>dg</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body-object${this.id}"></tbody>
+                            </table>
+                            `;
+
+            window.onload = function() {
+                document.getElementById("" + idDelPadre + "").innerHTML = htmlHeader;
+            }
+        }
+
+
+        createCalendarBody() {
+            window.onload = function() {
+                document.getElementById("table-body-object" + "" + idDelPadre + "").innerHTML = htmlHeader;
+            }
+        }
+
+
+        createCalendar(idParentContainer) {
+            //calcular quants calendaris s'han de crear
+ 
+            this.createCalendarHeader();
+            this.createCalendarBody();
+        }
+
+
+        createSimpleTable() {
+
+        }
+
+
+        dayStringToNumber(dayName) {
+            var days = {dill:1,dima:2,dime:3,dijo:4,dive:5,diss:6,dium:7};
+            var day = days[dayName.toLowerCase().substr(0,4)];
+            return day;  
+        }
+
+
+        function calculateSessions(startActivity, endActivity, weekday) {
+
+            //adaptar funció per a més d'un dia
+
+            var start = moment(startActivity),
+                end = moment(endActivity),
+                day = weekday; 
+
+            var result = [];
+            var current = start.clone();
+
+            while (current.day(7 + day).isBefore(end)) {
+                result.push(current.clone());
+            }
+
+            return result;
+            }
+            
+        }
+
+
+    var objeto = new DateManager();
+    console.log(objeto.id);
+    var objeto2 = new DateManager();
+    console.log(objeto2.id);
+    var objeto3 = new DateManager();
+    console.log(objeto3.id);
+</script>
