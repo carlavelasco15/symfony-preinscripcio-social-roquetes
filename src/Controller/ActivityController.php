@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Activity;
+use App\Entity\Participant;
 use App\Form\ActivityFormType;
+use App\Form\ParticipantFormType;
 use App\Repository\ActivityRepository;
 use App\Repository\EntityRepository;
 use App\Services\FileService;
@@ -71,6 +73,7 @@ class ActivityController extends AbstractController
             'formulario' => $form->createView()
         ]);
     }
+    
 
     /**
      * @Route("/editar/{id}", name="_edit")
@@ -95,8 +98,12 @@ class ActivityController extends AbstractController
         Activity $activity,
         EntityRepository $entityRepository): Response
     {
-        return $this->render('activity/show.html.twig', [
-            'activity' => $activity
+        $participant = new Participant();
+        $newParticipantForm = $this->createForm(ParticipantFormType::class, $participant);
+
+        return $this->renderForm('activity/show.html.twig', [
+            'activity' => $activity,
+            'newParticipantForm' => $newParticipantForm
         ]);
     }
 
