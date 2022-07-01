@@ -47,10 +47,6 @@ class ActivityFormType extends AbstractType
             ->add('worker', TextType::class, [
                 'required' => false
                     ])
-            ->add('session_count', NumberType::class, [
-                'empty_data' => 0,
-                'html5' => true
-            ])
             ->add('places_total', NumberType::class, [
                 'empty_data' => 0,
                 'html5' => true
@@ -82,7 +78,6 @@ class ActivityFormType extends AbstractType
                 }
             ])
             ->add('category', EntityType::class, [
-                'mapped' => false,
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'label' => 'Edat',

@@ -49,23 +49,19 @@
                     {{ form_widget(formulario.ageRange) }}
                 </div>
                 <div class="col-6 my-2">
-                    {{ form_label(formulario.category, 'CategorIa') }}
+                    {{ form_label(formulario.category, 'Categoria') }}
                     {{ form_widget(formulario.category) }}
                 </div>
 
 
                 <h5 class="mt-5">Horaris i dates</h5>
-                <div class="col-5 my-2">
+                <div class="col-6 my-2">
                     {{ form_label(formulario.start_date, 'Data inici') }}
                     {{ form_widget(formulario.start_date) }}
                 </div>
-                <div class="col-5 my-2">
+                <div class="col-6 my-2">
                     {{ form_label(formulario.end_date, 'Data fi') }}
                     {{ form_widget(formulario.end_date) }}
-                </div>
-                <div class="col-2 my-2">
-                    {{ form_label(formulario.session_count, 'Núm. sessions') }}
-                    {{ form_widget(formulario.session_count) }}
                 </div>
                 <div class="col-4 my-2">
                     {{ form_label(formulario.weekday, 'Dia') }}
@@ -81,6 +77,7 @@
                 </div>
             </div>
         {{ form_end(formulario) }}
+        
     </div>
 
 
@@ -100,7 +97,8 @@
                 </div>
                 <div></div>
             </div>
-    <script type="text/javascript" src="/js/preview.js"></script>
+    <script type="text/javascript" src="/js/previewImage.js"></script>
+    <script type="text/javascript" src="/js/previewSessions.js"></script>
 
 </div>
 

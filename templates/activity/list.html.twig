@@ -34,6 +34,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                        {% if activities|length > 0 %}
                             {% for activity in activities %}
                                 <tr>                                 
                                     <td class="text-start px-3"><a href="{{ path('activity_show', {'id': activity.id})}}">{{ activity.name }}</a></td>
@@ -62,6 +63,11 @@
 
                                 <script type="text/javascript" src="/js/table_script.js"></script>
                             {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6">no hi ha activitats</td>
+                             </tr>
+                        {% endif %}
                          </tbody>
 
                           <!-- Modal -->
