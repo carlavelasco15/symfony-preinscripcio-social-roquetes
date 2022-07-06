@@ -89,8 +89,9 @@ class ActivityFormType extends AbstractType
             /* ->add('category', ChoiceType::class) */
             ->add('weekday', ChoiceType::class, [
                 'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
                 'choices' => [
-                    '' => '',
                     'Dilluns' => 'dilluns',
                     'Dimarts' => 'dimarts',
                     'Dimecres' => 'dimecres',
@@ -99,6 +100,9 @@ class ActivityFormType extends AbstractType
                     'Dissabte' => 'dissabte',
                     'Diumenge' => 'diumenge',
                 ],
+                'label_attr' => [
+                    'class' => 'checkbox-inline'
+                ]
             ])
             ->add('start_hour', TimeType::class, [ 
                 'mapped' => false,
@@ -117,8 +121,8 @@ class ActivityFormType extends AbstractType
             ;
         }
                 
-                public function configureOptions(OptionsResolver $resolver): void
-                {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
         $resolver->setDefaults([
             'data_class' => Activity::class,
         ]);

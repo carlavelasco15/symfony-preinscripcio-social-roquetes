@@ -3,8 +3,9 @@
 {% block title %}Hello ActivityController!{% endblock %}
 
 {% block jsLinks %}
-    <script src="/js/momentCat.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
+   
+
 {% endblock %}
 
 {% block main %}
@@ -63,15 +64,15 @@
                     {{ form_label(formulario.end_date, 'Data fi') }}
                     {{ form_widget(formulario.end_date) }}
                 </div>
-                <div class="col-4 my-2">
-                    {{ form_label(formulario.weekday, 'Dia') }}
-                    {{ form_widget(formulario.weekday) }}
+                <div class="col-12 my-2">
+                    {{ form_label(formulario.weekday, 'Dies') }}
+                    {{ form_widget(formulario.weekday, {'row_attr' : {'class' : 'p-5'}}) }}
                 </div>
-                <div class="col-4 my-2">
+                <div class="col-5 my-2">
                     {{ form_label(formulario.start_hour, 'Hora inici') }}
                     {{ form_widget(formulario.start_hour) }}
                 </div>
-                <div class="col-4 my-2">
+                <div class="col-5 my-2">
                     {{ form_label(formulario.end_hour, 'Hora fi') }}
                     {{ form_widget(formulario.end_hour) }}
                 </div>
@@ -82,23 +83,46 @@
 
 
     <div class="col-4 text-center d-flex flex-column justify-content-around">
-        <div class="">
-            <h6 class="my-3 text-uppercase">Previsualització</h6>
-            <figure class="my-2 p-2">
-                <img id="preview"
-                    class="rounded border" style="max-width: 440px"
-                    src="{{ asset(path('activity_picture', {'picture': 'default.png'})) }}"
-                    style="object-fit:contain;max-height:400px">
-        </div>
+            <div class="">
+                <h6 class="my-3 text-uppercase">Previsualització</h6>
+                <figure class="my-2 p-2">
+                    <img id="preview"
+                        class="rounded border" style="max-width: 440px"
+                        src="{{ asset(path('activity_picture', {'picture': 'default.png'})) }}"
+                        style="object-fit:contain;max-height:400px">
+</div>
 
-            <div class="mx-4">
-                    <h6 class="my-3 text-uppercase">Sessions previstes (total: <span id="totalSessions">0</span>)</h6>
-                    <table class="table table-bordered table-striped" id="dayTable"></table>
-                </div>
-                <div></div>
+            <div>
+                <h6 class="my-3 text-uppercase">Sessions previstes</h6>
+                <div class="mx-1" id="tablaAqui"></div>
             </div>
+
+    </div>
+
     <script type="text/javascript" src="/js/previewImage.js"></script>
     <script type="text/javascript" src="/js/previewSessions.js"></script>
+
+     <style>
+
+    .red {
+        border-color: rgb(233, 38, 38) !important;
+        border-width: 2px !important;
+        background-color: #ec38384a !important;   
+    }
+
+    .red {
+        border-color: rgb(233, 38, 38) !important;
+        border-width: 2px !important;
+        background-color: #ec38384a !important;   
+    }
+
+    .today {
+            border-color: #3b3e4263 !important;
+            border-width: 3px !important;
+            background-color: #bbb3b326 !important;
+        }
+
+</style>
 
 </div>
 

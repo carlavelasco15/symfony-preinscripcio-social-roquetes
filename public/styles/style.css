@@ -12287,4 +12287,19 @@ tr {
   content: " *";
   color: #d9534f;
 }
+
+input[id^="activity_form_weekday_"] {
+  padding: 10px;
+}
+
+label[for^="activity_form_weekday_"] {
+  font-size: 1rem;
+  margin-left: .3em;
+}
+
+.special-btn {
+    background-color: #d75151;
+    color: #fff;
+}
+
 /*# sourceMappingURL=style.css.map */

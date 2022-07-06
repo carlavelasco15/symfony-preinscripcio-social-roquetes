@@ -9,6 +9,7 @@ use App\Form\ParticipantFormType;
 use App\Repository\ActivityRepository;
 use App\Repository\EntityRepository;
 use App\Services\FileService;
+use App\Services\PaginatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,15 +24,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class ActivityController extends AbstractController
 {
     /**
-     * @Route("s ", name="_list")
+     * @Route("s/{pagina} ",
+     * defaults= {"pagina": 1},
+     * name="_list")
      */     
-    public function index(ActivityRepository $activityRepository): Response
+    public function index(int $pagina, 
+                        PaginatorService $paginator): Response
     {
+        $paginator->setEntityType('App\Entity\Activity');
 
-        $activities = $activityRepository->findAll();
+        $activities = $paginator->findAllEntities($pagina);
 
         return $this->render('activity/list.html.twig', [
-            'activities' => $activities
+            'activities' => $activities,
+            'paginator' => $paginator
         ]);
     }
 
@@ -55,11 +61,22 @@ class ActivityController extends AbstractController
             if($file)
                 $activity->setPicture($uploader->upload($file));
 
-            $weekday = $form->get('weekday')->getData();
+                $weekday = $form->get('weekday')->getData();
+                
+            /* Tractament de l'string segons el nombre de dies de la setmana de l'activitat */
+            if (count($weekday) > 2) {
+                $last_element = array_pop($weekday);
+                $first_elements = implode(', ', $weekday);
+                $weekday_new_array = [$first_elements, $last_element];
+                $weekday_imploded = implode(' i ', $weekday_new_array); 
+            } else {
+                $weekday_imploded = implode(' i ', $weekday);
+            }
+
             $start_hour = $form->get('start_hour')->getData();
             $end_hour = $form->get('end_hour')->getData();
 
-            $activity->setSchedule($weekday . ' de ' . $start_hour->format('H:i') . ' a ' . $end_hour->format('H:i'));
+            $activity->setSchedule($weekday_imploded . ' de ' . $start_hour->format('H:i') . ' a ' . $end_hour->format('H:i'));
 
             $activity->setPlacesTaken(0);
             $activity->setIsVisible(1);

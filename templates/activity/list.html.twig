@@ -14,7 +14,7 @@
                                 <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                                         <title>Crear activitat</title>
-                                        <path fill="none" stroke="#0f0f0f" stroke-linecap="round" stroke-linejoin="round" stroke-width="42" d="M256 112v288M400 256H112" />
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
                                     </svg>
                                     CREAR ACTIVITAT
                                 </a>
@@ -22,63 +22,17 @@
                         </div>
                     </div>
 
-                    <table class="table table-striped table-hover text-center table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="px-3">Nom activitat</th>
-                                <th>Inici</th>
-                                <th>Fi</th>
-                                <th>Places</th>
-                                <th>Preu</th>
-                                <th>Accions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% if activities|length > 0 %}
-                            {% for activity in activities %}
-                                <tr>                                 
-                                    <td class="text-start px-3"><a href="{{ path('activity_show', {'id': activity.id})}}">{{ activity.name }}</a></td>
-                                    <td class="col-1">{{ activity.startDate|date('d-m-Y') }}</td>
-                                    <td class="col-1">{{ activity.endDate|date('d-m-Y') }}</td>
-                                    <td class="disponibility">{{ activity.placesTaken }} / {{ activity.placesTotal }} </td>
-                                    {% if activity.isFree %}
-                                        <td>
-                                            <img width="40" src="{{ asset('/res/no-cost.png')}}">
-                                        </td>
-                                    {% else %}
-                                        <td class="p-2">
-                                           <img width="32" src="{{ asset('/res/payment.png')}}">
-                                        </td>
-                                    {% endif %}
-                                    <td><a href=" {{ path('activity_edit', {'id': activity.id}) }}">editar</a> | copiar | 
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                       delete
-                                    </button>eliminar | ocultar</td>
-                                </tr>
+                    {% include 'includes/activity_list.html.twig' %}
 
-                                <script>
-                                    var total = {{ activity.placesTotal }};
-                                    var taken = {{ activity.placesTaken }};
-                                </script>
 
-                                <script type="text/javascript" src="/js/table_script.js"></script>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="6">no hi ha activitats</td>
-                             </tr>
-                        {% endif %}
-                         </tbody>
+                    {%
+                        include 'includes/paginator.html.twig' with {
+                            'route' : 'activity_list',
+                            'entidades' : 'activitats'
+                        }
+                    %}
 
-                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                            PROVA MODAL
-                        </button>
-
-                       {% include '/includes/modal.html.twig' with
-                            {
-                                'title' : 'Modal con include'
-                            }
-                       %}
+            
+                <script type="text/javascript" src="/js/table_script.js"></script>
                         
 {% endblock %}
