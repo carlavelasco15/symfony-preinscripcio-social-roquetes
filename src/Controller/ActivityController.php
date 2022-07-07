@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Activity;
+use App\Entity\Search;
 use App\Entity\Participant;
 use App\Form\ActivityFormType;
 use App\Form\ParticipantFormType;
+use App\Form\SearchFormType;
 use App\Repository\ActivityRepository;
 use App\Repository\EntityRepository;
+use App\Service\SimpleSearchService;
 use App\Services\FileService;
 use App\Services\PaginatorService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,18 +32,55 @@ class ActivityController extends AbstractController
      * defaults= {"pagina": 1},
      * name="_list")
      */     
-    public function index(int $pagina, 
-                        PaginatorService $paginator): Response
+    public function list(int $pagina,
+                        Request $request,
+                        PaginatorService $paginator,
+                        SimpleSearchService $searchService): Response
     {
-        $paginator->setEntityType('App\Entity\Activity');
+        $busqueda = new Search();
+        $busqueda->setEntity(Activity::class);
 
-        $activities = $paginator->findAllEntities($pagina);
+        $busqueda = $searchService->getSearchFromSession(Activity::class) ?? $busqueda;
 
-        return $this->render('activity/list.html.twig', [
-            'activities' => $activities,
-            'paginator' => $paginator
+        $searchForm = $this->createForm(SearchFormType::class, $busqueda, [
+            'field_choices' => [
+                'Nom' => 'name',
+                'Rang d\'edat' => 'age_range_id',
+                'Categoria' => 'category',
+            ],
+            'order_choices' => [
+                'ID' => 'id',
+                'Nom' => 'name',
+                'Categoria' => 'category_id',
+                'Entitat' => 'entity_id'
+            ]
+            ]);
+
+
+        $searchForm->handleRequest($request);
+        $searchService->setSearch($busqueda);
+
+        $activities = $paginator->paginate(
+            $searchService->prepareQuery(),
+            $pagina
+        );
+
+        $searchService->storeSearchInSession($busqueda);
+
+
+        if($searchForm->isSubmitted() && $searchForm->isValid())
+            return $this->redirectToRoute('activity_list');
+
+
+        return $this->renderForm('activity/list.html.twig', [
+            'search' => $searchForm,
+            'paginator' => $paginator,
+            'activities' => $activities
         ]);
     }
+
+
+
 
     /**
      * @Route("/crear ", name="_create")
@@ -95,16 +136,54 @@ class ActivityController extends AbstractController
     /**
      * @Route("/editar/{id}", name="_edit")
      */     
-    public function edit(ActivityRepository $activityRepository): Response
+    public function edit(
+            Activity $activity,
+            Request $request,
+            ActivityRepository $activityRepository,
+            FileService $uploader
+            ): Response
     {
+        $fichero = $activity->getPicture();
 
-        $activities = $activityRepository->findAll();
+        $form = $this->createForm(ActivityFormType::class, $activity);
+        $form->handleRequest($request);
 
-        return $this->render('activity/list.html.twig', [
-            'activities' => $activities
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $file = $form->get('picture')->getData();
+
+            if($file)
+                $fichero = $uploader->replace($file, $fichero);
+            
+            $activity->setPicture($fichero);
+            $activityRepository->add($activity, true);
+
+            $this->addFlash('succes', 'Activitat actualitzada correctament.');
+
+            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        }
+
+        return $this->renderForm('activity/edit.html.twig', [
+            'formulario' => $form,
+            'activity' => $activity
         ]);
     }
 
+
+
+     /**
+     * @Route("/forgetsearch", name="_forget_search")
+     */     
+    public function forgetSearch(
+        SimpleSearchService $searchService
+        ): Response
+    {
+        $searchService->removeSearchFromSession(Activity::class);
+
+        $this->addFlash('success', 'Filtro quitado.');
+
+        return $this->redirectToRoute('activity_list');
+    }
 
 
 
@@ -144,5 +223,33 @@ class ActivityController extends AbstractController
         );
 
         return $response;
+    }
+
+
+     /**
+     * @Route("/activity/picture/delete/{id<\d+>}", 
+     * name="_picture_delete")
+     */     
+    public function deletePicture(
+            Activity $activity,
+            FileService $uploader,
+            EntityManagerInterface $em
+        
+        ): Response
+    {
+        
+        //denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if($file = $activity->getPicture()) {
+            $uploader->delete($file);
+
+            $activity->setPicture(NULL);
+            $em->flush();
+
+            $mensaje = 'Imatge de l\'activitat '. $activity->getPicture().' eliminada.';
+            $this->addFlash('success', $mensaje);
+        }
+
+        return $this->redirectToRoute('activity_edit', ['id' => $activity->getId()]);
     }
 }

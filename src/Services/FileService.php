@@ -2,7 +2,7 @@
 namespace App\Services;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Syfmony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;   
 
 
@@ -33,7 +33,7 @@ class FileService {
     }
 
     public function replace(UploadedFile $newFile, ?string $oldFile = NULL, $uniqueName = true) {
-        if($file) 
+        if($oldFile) 
             $this->delete($oldFile);
         return $this->upload($newFile, $uniqueName);
     }

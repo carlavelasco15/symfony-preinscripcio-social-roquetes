@@ -2,37 +2,49 @@
 
 {% block title %}Hello DefaultController!{% endblock %}
 
+{% block breadcrumbs %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('pelicula_list') }}">Películas</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Búsqueda</li>
+{% endblock %}
+
 {% block main %}
+    {{ parent() }}
 
-            <div class="table-responsive overflow-hidden p-1">
-                        <div class="row">
-                            <div class="col-sm-6 pb-2 mb-2">
-                                <h2>Llista d'activitats</h2>
-                            </div>
+    <div class="table-responsive overflow-hidden p-1">
+        <div class="row">
+            <div class="col-sm-6 pb-2 mb-2">
+                <h2>Llista d'activitats</h2>
+            </div>
 
-                            <div class="col-sm-3">
-                                <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                                        <title>Crear activitat</title>
-                                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
-                                    </svg>
-                                    CREAR ACTIVITAT
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-sm-3">
+                <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                        <title>Crear activitat</title>
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
+                    </svg>
+                    CREAR ACTIVITAT
+                </a>
+            </div>
+        </div>
+    </div>
 
-                    {% include 'includes/activity_list.html.twig' %}
+    {% include 'includes/search.html.twig' %}
+
+    <div class="text-end">
+        <a href="{{ path('activity_forget_search') }}">Eliminar filtres</a>
+    </div>
+
+    {% include 'includes/activity_list.html.twig' %}
 
 
-                    {%
-                        include 'includes/paginator.html.twig' with {
-                            'route' : 'activity_list',
-                            'entidades' : 'activitats'
-                        }
-                    %}
-
+    {%
+        include 'includes/paginator.html.twig' with {
+            'route' : 'activity_list',
+            'entidades' : 'activitats'
+        }
+    %}
             
-                <script type="text/javascript" src="/js/table_script.js"></script>
+    <script type="text/javascript" src="/js/table_script.js"></script>
                         
 {% endblock %}

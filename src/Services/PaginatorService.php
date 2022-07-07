@@ -9,7 +9,10 @@ class PaginatorService {
     private $limit, $entityManager, $entityType = '';
     private $paginaActual = 1, $total = 0;
 
-    public function __construct(int $limit, EntityManagerInterface $entityManager) {
+    public function __construct (
+        int $limit, 
+        EntityManagerInterface $entityManager
+    ) {
         $this->limit = $limit;
         $this->entityManager = $entityManager;
     }
@@ -23,7 +26,7 @@ class PaginatorService {
     }
 
     public function setLimit(int $limit) {
-        return $this->paginaActual;
+        $this->limit = $limit;
     }
 
     public function getTotal():int {
@@ -55,6 +58,5 @@ class PaginatorService {
         ORDER BY p.id DESC");
 
     return $this->paginate($consulta, $paginaActual);
-        
    }
 }

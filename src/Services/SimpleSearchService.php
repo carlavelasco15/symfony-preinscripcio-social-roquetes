@@ -15,13 +15,14 @@ class SimpleSearchService {
     private $session;
 
     public function __construct (
-    EntityManagerInterface $entityManager,
-    RequestStack $requestStack) {
+            EntityManagerInterface $entityManager,
+            RequestStack $requestStack
+    ) {
         $this->entityManager = $entityManager;
-        $this->sesison = $requestStack->getSession();
+        $this->session = $requestStack->getSession();
     }
 
-    public function setsearch(Search $search):self {
+    public function setSearch(Search $search):self {
         $this->search = $search;
         return $this;
     }
@@ -34,9 +35,11 @@ class SimpleSearchService {
         $consulta = $this->entityManager->createQuery(
             "SELECT p
             FROM ".$this->search->getEntity()." p
-            WHERE p.".$this->search->getOrderField()." ".$this->search->getOrder())
-        ->setParameter('valor', '%'. $this->search->getValue().' %')
-        ->setMaxResults(($this->search->getLimit()));
+            WHERE p.".$this->search->getField()." LIKE :valor
+            ORDER BY p.id ASC")
+            /* ORDER BY p.".$this->search->getOrderField()." ".$this->search->getOrder()) */
+        ->setParameter('valor', '%'. $this->search->getValue().'%')
+        ->setMaxResults($this->search->getLimit());
 
         return $consulta;
     }

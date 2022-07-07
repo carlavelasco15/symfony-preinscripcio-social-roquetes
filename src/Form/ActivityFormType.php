@@ -86,7 +86,6 @@ class ActivityFormType extends AbstractType
                     ->orderBy('a.id', 'ASC');
                 }
             ])
-            /* ->add('category', ChoiceType::class) */
             ->add('weekday', ChoiceType::class, [
                 'mapped' => false,
                 'expanded' => true,
@@ -114,7 +113,7 @@ class ActivityFormType extends AbstractType
                 'input'  => 'datetime',
                 'widget' => 'choice',
             ])
-            ->add('Crear', SubmitType::class, [
+            ->add('Guardar', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary my-3']
             ])
                     
