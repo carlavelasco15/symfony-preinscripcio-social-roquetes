@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<Ticket>
@@ -37,6 +38,43 @@ class TicketRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function searchTicketsByParticipant($search): Query {
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT p
+            FROM App\Entity\Ticket p
+            WHERE p.activity in (
+                SELECT b
+                FROM App\Entity\Activity b
+                WHERE b.name LIKE :valor
+            )
+            AND p.participant = :id
+            ORDER BY p.id ASC"
+        )
+
+        
+        ->setParameter('id', $search->getEntityId())
+        ->setParameter('valor',  '%'. $search->getValue() .'%')
+        ->setMaxResults($search->getLimit());
+
+
+        return $consulta;
+    }
+
+
+    public function searchTicketsByActivity($activity): array {
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT p
+            FROM App\Entity\Ticket p
+            WHERE p.activity = :id
+            AND p.is_deleted = 0
+            ORDER BY p.id ASC"
+        )
+        ->setParameter('id', $activity)
+        ->getResult();
+
+        return $consulta;
     }
 
 //    /**

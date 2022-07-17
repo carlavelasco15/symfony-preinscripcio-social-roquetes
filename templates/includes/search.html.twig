@@ -1,15 +1,12 @@
-<div class="bg-light border row align-items-center justify-content-center my-3 p-3">
-    <p>
-        Indica los criterios de búsqueda y presiona el botón <i>Buscar</i>.
-    </p>
+<div>
 
     {{ form_start(search) }}
-        <div class="row">
-            <div class="col-6 col-md-6 col-xl-6">
+        <div class="row align-items-end">
+            <div class="col-7">
                     {{ form_label(search.value, 'Consulta') }}        
                     {{ form_widget(search.value) }}
             </div>
-            <div class="col-6 col-md-3 col-xl-3">
+            <div class="col-3">
                     {{ form_label(search.field, 'Camp') }}        
                     {{ form_widget(search.field) }}
             </div>
@@ -25,7 +22,7 @@
                     {{ form_label(search.limit, 'Limit') }}        
                     {{ form_widget(search.limit) }}
             </div> #}
-            <div class="col-6 col-md-4 col-xl-2 align-self-end">
+            <div class="col-2">
                 <label class="form-label py-2"></label>{{ form_widget(search.Buscar) }}
             </div>
             {{ form_rest(search) }}

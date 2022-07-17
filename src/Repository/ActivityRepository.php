@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Activity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<Activity>
@@ -38,6 +40,22 @@ class ActivityRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function searchActivityQuery($search): Query {
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT p
+            FROM App\Entity\Activity p
+            WHERE p.".$search->getField()." LIKE :valor
+            AND p.is_deleted = 0
+            ORDER BY p.id ASC")
+
+
+        ->setParameter('valor', '%'. $search->getValue() .'%')
+        ->setMaxResults($search->getLimit());
+
+        return $consulta;
+    }
+
 
 //    /**
 //     * @return Activity[] Returns an array of Activity objects

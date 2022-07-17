@@ -44,6 +44,11 @@ class Participant
      */
     private $tickets;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -128,6 +133,18 @@ class Participant
                 $ticket->setParticipant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

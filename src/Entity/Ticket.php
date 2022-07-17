@@ -35,6 +35,11 @@ class Ticket
      */
     private $ticketStatus;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_deleted;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,6 +77,18 @@ class Ticket
     public function setTicketStatus(?TicketStatus $ticketStatus): self
     {
         $this->ticketStatus = $ticketStatus;
+
+        return $this;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->is_deleted;
+    }
+
+    public function setIsDeleted(bool $is_deleted): self
+    {
+        $this->is_deleted = $is_deleted;
 
         return $this;
     }

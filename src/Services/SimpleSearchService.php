@@ -13,6 +13,7 @@ class SimpleSearchService {
     private $search = NULL;
     private $entityManager;
     private $session;
+    private $query;
 
     public function __construct (
             EntityManagerInterface $entityManager,
@@ -27,26 +28,29 @@ class SimpleSearchService {
         return $this;
     }
 
-    public function getSearch():Search {
+    public function getSearch(): ?Search {
         return $this->search;
     }
 
+    /* TODO */
     public function prepareQuery(): Query {
         $consulta = $this->entityManager->createQuery(
             "SELECT p
             FROM ".$this->search->getEntity()." p
             WHERE p.".$this->search->getField()." LIKE :valor
             ORDER BY p.id ASC")
-            /* ORDER BY p.".$this->search->getOrderField()." ".$this->search->getOrder()) */
+
+
         ->setParameter('valor', '%'. $this->search->getValue().'%')
         ->setMaxResults($this->search->getLimit());
 
         return $consulta;
     }
 
-    public function find(): array {
+    // no s'utilitza xk hi ha el paginator
+   /*  public function find(): array {
         return $this->prepareQuery()->getResult();
-    }
+    } */
 
     public function storeSearchInSession(Search $search) {
         $this->session->set("Search_".$search->getEntity(), $search);

@@ -3,10 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Participant;
+use App\Entity\Activity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ParticipantFormType extends AbstractType
@@ -19,6 +22,12 @@ class ParticipantFormType extends AbstractType
             ->add('phone', TextType::class)
             ->add('email', EmailType::class, [
                 'required' => false
+            ])
+            ->add('comment', TextareaType::class, [
+                'required' => false
+            ])
+            ->add('Guardar', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-primary my-3']
             ])
         ;
     }

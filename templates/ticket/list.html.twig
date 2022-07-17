@@ -11,9 +11,11 @@
 
     {{ parent() }}
 
+    {# {% set participant = tickets[0].getParticipant() %} #}
+
     <div class="table-responsive overflow-hidden p-1">
            
-        <h2>Llista d'activitats</h2>
+    <h2>participant concret</h2>
         
     <div class="row align-items-end justify-content-between">
         <div class="col-2">
@@ -34,19 +36,18 @@
 
 
     <div class="text-end">
-        <a href="{{ path('activity_forget_search') }}">Eliminar filtres</a>
+        <a href="{{ path('ticket_forget_search') }}">Eliminar filtres</a>
     </div>
 
-    {% include 'includes/activity_list.html.twig' %}
+    {% include 'includes/ticket_list_participant.html.twig' %}
 
 
     {%
         include 'includes/paginator.html.twig' with {
-            'route' : 'activity_list',
-            'entidades' : 'activitats'
+            'route' : 'ticket_list',
+            'entidades' : 'tiquets'
         }
     %}
             
-    <script type="text/javascript" src="/js/activity_list.js"></script>
                         
 {% endblock %}

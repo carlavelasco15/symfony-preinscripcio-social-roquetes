@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Activitats</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Participants</a></li>
 {% endblock %}
 
 {% block main %}
@@ -13,16 +13,16 @@
 
     <div class="table-responsive overflow-hidden p-1">
            
-        <h2>Llista d'activitats</h2>
+        <h2>Llista de participants</h2>
         
     <div class="row align-items-end justify-content-between">
         <div class="col-2">
-            <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
+            <a href="{{ path('participant_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                    <title>Crear activitat</title>
+                    <title>Afegir participant</title>
                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
                 </svg>
-                CREAR ACTIVITAT
+                NOU PARTICIPANT
             </a>
         </div>
 
@@ -34,19 +34,18 @@
 
 
     <div class="text-end">
-        <a href="{{ path('activity_forget_search') }}">Eliminar filtres</a>
+        <a href="{{ path('participant_forget_search') }}">Eliminar filtres</a>
     </div>
 
-    {% include 'includes/activity_list.html.twig' %}
+    {% include 'includes/participant_list.html.twig' %}
 
 
     {%
         include 'includes/paginator.html.twig' with {
-            'route' : 'activity_list',
-            'entidades' : 'activitats'
+            'route' : 'participant_list',
+            'entidades' : 'participants'
         }
     %}
             
-    <script type="text/javascript" src="/js/activity_list.js"></script>
                         
 {% endblock %}

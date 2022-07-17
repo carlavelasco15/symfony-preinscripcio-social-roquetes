@@ -11,6 +11,7 @@ class Search
     private $order = 'ASC';
     private $limit = 100;
     private $entity = NULL;
+    private $entityId = NULL;
 
     
     public function getEntity() : ?string
@@ -25,6 +26,21 @@ class Search
 
         return $this;
     }
+
+    public function getEntityId() 
+    /* : ?Participant */
+    {
+        return $this->entityId;
+    }
+
+ 
+    public function setEntityId($entityId): self
+    {
+        $this->entityId = $entityId;
+
+        return $this;
+    }
+
 
 
     public function getLimit() : ?int

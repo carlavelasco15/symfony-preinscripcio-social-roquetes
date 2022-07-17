@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\Activity;
 use App\Entity\Search;
 use App\Entity\Participant;
+use App\Entity\Ticket;
+use App\Form\ActivityAddParticipantFormType;
 use App\Form\ActivityFormType;
 use App\Form\ParticipantFormType;
 use App\Form\SearchFormType;
 use App\Repository\ActivityRepository;
-use App\Repository\EntityRepository;
+use App\Repository\TicketRepository;
+use App\Repository\TicketStatusRepository;
 use App\Service\SimpleSearchService;
 use App\Services\FileService;
 use App\Services\PaginatorService;
@@ -35,7 +38,8 @@ class ActivityController extends AbstractController
     public function list(int $pagina,
                         Request $request,
                         PaginatorService $paginator,
-                        SimpleSearchService $searchService): Response
+                        SimpleSearchService $searchService,
+                        ActivityRepository $activityRepository): Response
     {
         $busqueda = new Search();
         $busqueda->setEntity(Activity::class);
@@ -56,12 +60,13 @@ class ActivityController extends AbstractController
             ]
             ]);
 
-
+            
         $searchForm->handleRequest($request);
         $searchService->setSearch($busqueda);
 
+
         $activities = $paginator->paginate(
-            $searchService->prepareQuery(),
+            $activityRepository->searchActivityQuery($busqueda),
             $pagina
         );
 
@@ -120,6 +125,7 @@ class ActivityController extends AbstractController
             $activity->setSchedule($weekday_imploded . ' de ' . $start_hour->format('H:i') . ' a ' . $end_hour->format('H:i'));
 
             $activity->setPlacesTaken(0);
+            $activity->setIsDeleted(0);
             $activity->setIsVisible(1);
 
             $activityRepository->add($activity, true);
@@ -134,7 +140,7 @@ class ActivityController extends AbstractController
     
 
     /**
-     * @Route("/editar/{id}", name="_edit")
+     * @Route("/editar/{id<\d+>}", name="_edit")
      */     
     public function edit(
             Activity $activity,
@@ -156,6 +162,26 @@ class ActivityController extends AbstractController
                 $fichero = $uploader->replace($file, $fichero);
             
             $activity->setPicture($fichero);
+
+            $weekday = $form->get('weekday')->getData();
+                
+            /* Tractament de l'string segons el nombre de dies de la setmana de l'activitat */
+            if (count($weekday) > 2) {
+                $last_element = array_pop($weekday);
+                $first_elements = implode(', ', $weekday);
+                $weekday_new_array = [$first_elements, $last_element];
+                $weekday_imploded = implode(' i ', $weekday_new_array); 
+            } else {
+                $weekday_imploded = implode(' i ', $weekday);
+            }
+
+            $start_hour = $form->get('start_hour')->getData();
+            $end_hour = $form->get('end_hour')->getData();
+
+            $activity->setSchedule($weekday_imploded . ' de ' . $start_hour->format('H:i') . ' a ' . $end_hour->format('H:i'));
+
+
+
             $activityRepository->add($activity, true);
 
             $this->addFlash('succes', 'Activitat actualitzada correctament.');
@@ -163,44 +189,99 @@ class ActivityController extends AbstractController
             return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
         }
 
+
         return $this->renderForm('activity/edit.html.twig', [
             'formulario' => $form,
-            'activity' => $activity
+            'activity' => $activity,
         ]);
     }
 
 
-
      /**
-     * @Route("/forgetsearch", name="_forget_search")
+     * @Route("/detall/{id<\d+>}", name="_show")
+     */     
+    public function show(
+        Activity $activity,
+        TicketRepository $ticketRepository
+       ): Response
+    {
+        $participant = new Participant();
+        $tickets = $ticketRepository->searchTicketsByActivity($activity);
+        $newParticipantForm = $this->createForm(ParticipantFormType::class, $participant);
+
+        $oldParticipantForm = $this->createForm(ActivityAddParticipantFormType::class, NULL, [
+            'action' => $this->generateUrl('ticket_create_in_activity', ['id' => $activity->getId()])
+        ]);
+
+
+        return $this->renderForm('activity/show.html.twig', [
+            'activity' => $activity,
+            'tickets' => $tickets,
+            'newParticipantForm' => $newParticipantForm,
+            'oldParticipantForm' => $oldParticipantForm
+        ]);
+    }
+
+    /**
+     * @Route("/search/forget", name="_forget_search")
      */     
     public function forgetSearch(
         SimpleSearchService $searchService
         ): Response
     {
         $searchService->removeSearchFromSession(Activity::class);
+        $this->addFlash('success', 'Filtre eliminat.');
+        return $this->redirectToRoute('activity_list');
+    }
 
-        $this->addFlash('success', 'Filtro quitado.');
 
+
+    /**
+     * @Route("/visibilitat/{id<\d+>}", name="_toggle_visibility")
+     */     
+    public function toggleVisibility(
+        Activity $activity,
+        ActivityRepository $activityRepository,
+        ): Response
+    {
+        $visibilityChange =  $activity->isIsVisible() ? 0 : 1;
+        $activity->setIsVisible($visibilityChange);
+
+        $activityRepository->add($activity, true);
+
+        $mensaje = $visibilityChange ? "L'activitat " . $activity->getName() . " és visible pel servei." : "L'activitat '" . $activity->getName() . "' s'ha ocultat pel servei.";
+        $this->addFlash('success', $mensaje);
+       
         return $this->redirectToRoute('activity_list');
     }
 
 
 
      /**
-     * @Route("/detall/{id}", name="_show")
+     * @Route("/eliminar/{id<\d+>}", name="_delete")
      */     
-    public function show(
+    public function delete(
         Activity $activity,
-        EntityRepository $entityRepository): Response
+        FileService $uploader,
+        ActivityRepository $activityRepository
+        ): Response
     {
-        $participant = new Participant();
-        $newParticipantForm = $this->createForm(ParticipantFormType::class, $participant);
 
-        return $this->renderForm('activity/show.html.twig', [
-            'activity' => $activity,
-            'newParticipantForm' => $newParticipantForm
-        ]);
+        /* TODO: AFEGIR VOTERS SI ACTIVITAT ELIMNARA NO MOSTRAR SHOW/DELETE/EDIT DE L'ACTIVITAT */
+        $file = $activity->getPicture();
+
+        if($file)
+            $uploader->delete($file);
+        $activity->setPicture(NULL);
+
+
+        $activity->setIsDeleted(1);
+        $activityRepository->add($activity, true);
+
+        $this->addFlash('success', 'Activitat eliminada correctament.');
+
+
+        return $this->redirectToRoute('activity_list');
     }
 
 
@@ -251,5 +332,70 @@ class ActivityController extends AbstractController
         }
 
         return $this->redirectToRoute('activity_edit', ['id' => $activity->getId()]);
+    }
+
+
+     /**
+     * @Route("/afegir/participant/{id<\d+>}", 
+     * name="_add_participant")
+     */     
+    public function addParticipant(
+            Activity $activity,
+            Request $request,
+            ActivityRepository $activityRepository,
+            TicketStatusRepository $ticketStatusRepository,
+            TicketRepository $ticketRepository
+        
+        ): Response
+    {
+        
+        //denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $formularioAddParticipant = $this->createForm(ActivityAddParticipantFormType::class);
+        $formularioAddParticipant->handleRequest($request);
+        $participant = $formularioAddParticipant->getData()['participant'];
+
+        $ticket = new Ticket();
+        $ticketStatus = $ticketStatusRepository->find(1);
+
+        /* TODO: FALTA FLASH */
+
+        $ticket->setParticipant($participant)
+                ->setActivity($activity)
+                ->setTicketStatus($ticketStatus)
+                ->setIsDeleted(0);
+        $activity->setPlacesTaken($activity->getPlacesTaken() + 1);
+
+        $activityRepository->add($activity, true);
+        $ticketRepository->add($ticket, true);
+
+        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+    }
+
+
+    /**
+     * @Route("/eliminar/participant/{id<\d+>}", 
+     * name="_remove_participant")
+     */ 
+    public function removeParticipant(
+        Ticket $ticket,
+        TicketStatusRepository $ticketStatusRepository,
+        ActivityRepository $activityRepository,
+        TicketRepository $ticketRepository
+    ): Response {
+
+        $activity = $ticket->getActivity();
+        $ticketStatus = $ticketStatusRepository->find(6);
+
+        /* TODO: FALTA FLASH */
+
+        $ticket->setIsDeleted(1)
+                ->setTicketStatus($ticketStatus);
+        $activity->setPlacesTaken($activity->getPlacesTaken() - 1);
+
+        $activityRepository->add($activity, true);
+        $ticketRepository->add($ticket, true);
+
+        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]); 
     }
 }

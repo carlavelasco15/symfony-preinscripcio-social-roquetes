@@ -5739,6 +5739,7 @@ fieldset:disabled .btn {
   border-radius: 0.25rem;
 }
 
+
 .alert-heading {
   color: inherit;
 }
@@ -5814,6 +5815,13 @@ fieldset:disabled .btn {
   background-color: #f7dddc;
   border-color: #f4cbca;
 }
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
 
 .alert-danger .alert-link {
   color: #682826;
@@ -12301,5 +12309,80 @@ label[for^="activity_form_weekday_"] {
     background-color: #d75151;
     color: #fff;
 }
+
+.red {
+  border-color: rgb(233, 38, 38) !important;
+  border-width: 2px !important;
+  background-color: #ec38384a !important;   
+}
+
+.today {
+      border-color: #3b3e4263 !important;
+      border-width: 3px !important;
+      background-color: #bbb3b326 !important;
+}
+
+
+.contenedor{
+   
+  margin: auto;
+  padding: 20px 15px 50px 50px;
+  border-radius: 10px;
+  box-shadow: 0 7px 10px 0px rgba(0, 0, 0, 0.8);
+}
+
+.contenedor .titulo{
+  font-size: 3.5ex;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+#pestanas {
+  float: top;
+  font-size: 3ex;
+  font-weight: bold;
+}
+
+#pestanas li{
+  list-style-type: none;
+} 
+
+
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+
+
+.box.active {
+  height: 100%;
+}
+
+.panel-link {
+  border: 0;
+  width: 100%;
+}
+
+.content, .box {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
 
 /*# sourceMappingURL=style.css.map */

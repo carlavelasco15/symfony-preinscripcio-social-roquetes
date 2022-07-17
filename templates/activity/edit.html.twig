@@ -1,10 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ActivityController!{% endblock %}
+{% block title %}Editar activitat {{ parent() }}{% endblock %}
 
+{% block breadcrumbs %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Activitats</a></li>
+    <li class="breadcrumb-item active">Editar</li>
+{% endblock %}
 
 {% block main %}
+
+   
 <h2 class="pb-2 mb-2">Modificar activitat</h2>
+
 
 <div class="row">
     <div class="col-8">
@@ -91,16 +99,16 @@
                 {% if activity.picture %}
 
                         <figcaption class="my-3 text-center">
-                            Eliminar l'imatge
+                            Eliminar la imatge
                             <a href="{{ path('activity_picture_delete', {'id': activity.id}) }}">
-                                <img src="{{ asset('images/buttons/delete.png')}}" height="30" width="30"
+                                <img src="{{ asset('res/delete.png')}}" height="30" width="30"
                                     alt="Borrar carátula" title="Borrar carátula">
                             </a>
                         </figcaption>
                     </figure>
 
                 {% endif %}
-</div>
+            </div>
 
             <div>
                 <h6 class="my-3 text-uppercase">Sessions previstes</h6>
@@ -109,30 +117,15 @@
 
     </div>
 
-    <script type="text/javascript" src="/js/previewImage.js"></script>
-    <script type="text/javascript" src="/js/previewSessions.js"></script>
 
-     <style>
-
-    .red {
-        border-color: rgb(233, 38, 38) !important;
-        border-width: 2px !important;
-        background-color: #ec38384a !important;   
-    }
-
-    .red {
-        border-color: rgb(233, 38, 38) !important;
-        border-width: 2px !important;
-        background-color: #ec38384a !important;   
-    }
-
-    .today {
-            border-color: #3b3e4263 !important;
-            border-width: 3px !important;
-            background-color: #bbb3b326 !important;
-        }
-
-</style>
+    <script>
+        horario = '{{ activity.schedule }}';
+    </script>
+    <script type="text/javascript" src="/js/prova.js"></script>
+    <script type="text/javascript" src="/js/date_manager.js"></script>
+    <script type="text/javascript" src="/js/generate_calendar.js"></script>
+    <script type="text/javascript" src="/js/preview_image.js"></script>
+    <script type="text/javascript" src="/js/preview_sessions.js"></script>
 
 </div>
 
