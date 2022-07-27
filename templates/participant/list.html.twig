@@ -1,28 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}Llista de participants {{ parent() }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Participants</a></li>
+    <li class="breadcrumb-item active">Participants</li>
 {% endblock %}
 
 {% block main %}
-
     {{ parent() }}
 
     <div class="table-responsive overflow-hidden p-1">
            
-        <h2>Llista de participants</h2>
+        <h4 class="border-bottom py-2 mb-4">Llista de participants</h4>
         
     <div class="row align-items-end justify-content-between">
-        <div class="col-2">
+        <div class="col-3">
             <a href="{{ path('participant_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                     <title>Afegir participant</title>
                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
                 </svg>
-                NOU PARTICIPANT
+                CREAR PARTICIPANT
             </a>
         </div>
 

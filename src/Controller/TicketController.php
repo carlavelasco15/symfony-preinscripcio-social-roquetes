@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Activity;
 use App\Entity\Participant;
 use App\Entity\Search;
+use App\Entity\GetTicketStatus;
 use App\Entity\Ticket;
 use App\Form\ActivityAddParticipantFormType;
 use App\Form\SearchFormType;
@@ -12,7 +13,7 @@ use App\Repository\ActivityRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\TicketRepository;
 use App\Repository\TicketStatusRepository;
-use App\Service\SimpleSearchService;
+use App\Services\SimpleSearchService;
 use App\Services\PaginatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,7 @@ class TicketController extends AbstractController
 {
 
 
-    #[Route('s/{id<\d+>}/{pagina}', defaults: ['pagina' => 1], name: 'list')]
+    #[Route('s/{id<\d+>}/{pagina<\d+>}', defaults: ['pagina' => 1], name: 'list')]
     public function list(
             Participant $participant,
             int $pagina,
@@ -63,12 +64,13 @@ class TicketController extends AbstractController
         $searchService->storeSearchInSession($busqueda);
 
         if($searchForm->isSubmitted() && $searchForm->isValid())
-            return $this->redirectToRoute('ticket_list', ['id' => $participant->getId()] );
+            return $this->redirectToRoute('ticket_list', ['id' => $participant->getId()]);
     
         return $this->renderForm('ticket/list.html.twig', [
             'search' => $searchForm,
             'paginator' => $paginator,
-            'tickets' => $tickets
+            'tickets' => $tickets,
+            'participant' => $participant
         ]);
     }
 
@@ -87,7 +89,8 @@ class TicketController extends AbstractController
         //denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         $ticket = new Ticket();
-        $ticketStatus = $ticketStatusRepository->find(1);
+        $ticketStatus = $ticketStatusRepository->find(GetTicketStatus::OPEN);
+        
         $ticket->setParticipant($participant)
                 ->setActivity($activity)
                 ->setTicketStatus($ticketStatus)
@@ -124,7 +127,7 @@ class TicketController extends AbstractController
     $participant = $formularioAddParticipant->getData()['participant'];
 
     $ticket = new Ticket();
-    $ticketStatus = $ticketStatusRepository->find(1);
+    $ticketStatus = $ticketStatusRepository->find(GetTicketStatus::OPEN);
 
 
     $ticket->setParticipant($participant);
@@ -151,3 +154,4 @@ class TicketController extends AbstractController
         return $this->redirectToRoute('participant_list');
     }
 }
+

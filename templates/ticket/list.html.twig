@@ -1,24 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}{{ participant.name }} {{ parent() }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Activitats</a></li>
+       <li class="breadcrumb-item"><a href="{{ path('participant_list') }}">Participants</a></li>
+        <li class="breadcrumb-item active">{{ participant.name }}</li>
 {% endblock %}
 
 {% block main %}
-
     {{ parent() }}
 
-    {# {% set participant = tickets[0].getParticipant() %} #}
 
     <div class="table-responsive overflow-hidden p-1">
            
-    <h2>participant concret</h2>
+    <h4 class="border-bottom py-2 mb-4">{{ participant.name }}</h4>
         
     <div class="row align-items-end justify-content-between">
-        <div class="col-2">
+        <div class="col-3">
             <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                     <title>Crear activitat</title>
@@ -45,7 +44,8 @@
     {%
         include 'includes/paginator.html.twig' with {
             'route' : 'ticket_list',
-            'entidades' : 'tiquets'
+            'entidades' : 'tiquets',
+            'idEntidad' : participant.id
         }
     %}
             

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Activity;
 use App\Entity\Search;
 use App\Entity\Participant;
+use App\Entity\GetTicketStatus;
 use App\Entity\Ticket;
 use App\Form\ActivityAddParticipantFormType;
 use App\Form\ActivityFormType;
@@ -13,9 +14,10 @@ use App\Form\SearchFormType;
 use App\Repository\ActivityRepository;
 use App\Repository\TicketRepository;
 use App\Repository\TicketStatusRepository;
-use App\Service\SimpleSearchService;
+use App\Services\SimpleSearchService;
 use App\Services\FileService;
 use App\Services\PaginatorService;
+use App\Services\TicketStatusService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -39,8 +41,10 @@ class ActivityController extends AbstractController
                         Request $request,
                         PaginatorService $paginator,
                         SimpleSearchService $searchService,
+                        TicketStatusService $ticketStatus,
                         ActivityRepository $activityRepository): Response
     {
+
         $busqueda = new Search();
         $busqueda->setEntity(Activity::class);
 
@@ -88,7 +92,7 @@ class ActivityController extends AbstractController
 
 
     /**
-     * @Route("/crear ", name="_create")
+     * @Route("/crear", name="_create")
      */     
     public function create(
         Request $request,
@@ -184,7 +188,7 @@ class ActivityController extends AbstractController
 
             $activityRepository->add($activity, true);
 
-            $this->addFlash('succes', 'Activitat actualitzada correctament.');
+            $this->addFlash('success', 'Activitat actualitzada correctament.');
 
             return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
         }
@@ -286,7 +290,7 @@ class ActivityController extends AbstractController
 
 
      /**
-     * @Route("/activity/picture/{picture}", name="_picture")
+     * @Route("/imatge/{picture}", name="_picture")
      */     
     public function showPicture(string $picture): Response
     {
@@ -308,7 +312,7 @@ class ActivityController extends AbstractController
 
 
      /**
-     * @Route("/activity/picture/delete/{id<\d+>}", 
+     * @Route("/imatge/eliminar/{id<\d+>}", 
      * name="_picture_delete")
      */     
     public function deletePicture(
@@ -356,7 +360,7 @@ class ActivityController extends AbstractController
         $participant = $formularioAddParticipant->getData()['participant'];
 
         $ticket = new Ticket();
-        $ticketStatus = $ticketStatusRepository->find(1);
+        $ticketStatus = $ticketStatusRepository->find(GetTicketStatus::OPEN);
 
         /* TODO: FALTA FLASH */
 
@@ -398,4 +402,5 @@ class ActivityController extends AbstractController
 
         return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]); 
     }
+
 }

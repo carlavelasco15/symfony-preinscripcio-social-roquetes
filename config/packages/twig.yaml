@@ -1,5 +1,10 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+
+    paths:
+        '%kernel.project_dir%/public/styles' : styles
+        '%kernel.project_dir%/public/res' : images    
+    
     form_themes: [
         'bootstrap_5_layout.html.twig',
         'widgets/data_list.html.twig']

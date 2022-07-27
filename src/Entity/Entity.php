@@ -54,9 +54,25 @@ class Entity
      */
     private $activities;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="equipment")
+     */
+    private $users;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $schedule;
+
+    /**
+     * @ORM\Column(type="string", length=128, nullable=true)
+     */
+    private $picture;
+
     public function __construct()
     {
         $this->activities = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
  
@@ -164,6 +180,57 @@ class Entity
                 $activity->setEntity(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function getSchedule(): ?string
+    {
+        return $this->schedule;
+    }
+
+    public function setSchedule(?string $schedule): self
+    {
+        $this->schedule = $schedule;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

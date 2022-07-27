@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pàgina d'usuari {{app.user.username}}{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+    
+        <h4 class="border-bottom py-2 mb-4">Configuració d'usuari</h4>
+
+        {% if not app.user.isVerified %}
+            <div class="row alert alert-danger p-2 my-4" role="alert">
+                <p>La dirección de email {{ app.user.email }} <b>no ha sido verificada</b>.
+                Por favor haz clic en <a href="{{ path('resend_verification') }}"> verificar usuario</a>
+                para completar el proceso de registro y poder acceder a todas las
+                 funcionalidades de SymfoFilms.</p>
+            </div>
+        {% endif %}
+
+
+        <div class="bg-light border row align-items-center justify-content-center my-3">
+            <div class="col m-3 p-3 text-start">
+                <div class="my-2 p-2">
+                    <h3>Datos</h3>
+                    <p><b>Email</b>: {{ app.user.email }}</p>
+                    <p><b>Nom d'usuari</b>: {{ app.user.username }}</p>
+            </div>
+
+            <div class="my-2 p-2">
+                <h3>Operaciones</h3>
+                <ul>
+                    <li><a href="#">Modificar mis datos</a>.</li>
+                    <li><a href="#">Baja de usuario</a>.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

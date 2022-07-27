@@ -1,22 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}Llista d'activitats {{ parent() }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Activitats</a></li>
+    <li class="breadcrumb-item active">Activitats</li>
 {% endblock %}
 
 {% block main %}
-
     {{ parent() }}
 
     <div class="table-responsive overflow-hidden p-1">
            
-        <h2>Llista d'activitats</h2>
+        <h4 class="border-bottom py-2 mb-4">Llista d'activitats</h4>
         
     <div class="row align-items-end justify-content-between">
-        <div class="col-2">
+        <div class="col-3">
             <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                     <title>Crear activitat</title>

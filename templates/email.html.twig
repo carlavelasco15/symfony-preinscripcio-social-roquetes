@@ -1,0 +1,34 @@
+{% apply inline_css(
+    source('@styles/style.css')
+) %}
+
+    {% block header %}
+
+        <header class="row border bg-light m-3">
+            <div class="col-9 p-2">
+                <hgroup>
+                    <h2>SymfoFilms</h2>
+                    <h3>Página de cine, ejemplo de clase.</h3>
+                </hgroup>
+            </div>
+            <div class="col-3 p-2">
+                <img styyle="width:100%" alg="Logo"
+                    src="{{ email.image('@images/LogoP-S.png') }}">
+            </div>
+        </header>
+
+    {% endblock %}
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+
+    {% block footer %}
+        <footer class="page-footer p-2 m-2 bg-light border" style="font-size: 0.8rem;">
+            <p>Aplicación creada Por    
+                <b><a href="https://robertsallent.com" rel="author" hreflang="es">
+                    Robert Sallent</a></b> como ejemplo de clase. </p>
+                <p>Desarrollada haciendo uso de <b>Symfony</b> y <b>Bootstrap</b>.</p>
+        </footer>
+    {% endblock %}
+
+{% endapply %}

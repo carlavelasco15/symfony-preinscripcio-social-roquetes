@@ -1,0 +1,74 @@
+{# {% extends 'base.html.twig' %} #}
+
+{# {% block title %}Log in {{ parent() }}{% endblock %} #}
+
+{% block main %}
+    {# {{ parent() }} #}
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5 mt-5">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h4>Login</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post">
+
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+
+                        {% if app.user %}
+                            <div class="mb-3">
+                                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('logout') }}">Logout</a>
+                            </div>
+                        {% endif %}
+
+                        {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+
+                            <div class="mb-3 text-center">
+                                <p>Estás identificado como {{ app.user.username }}.</p>
+                                <a class="btn btn-primary" href="{{ path('logout') }}">Logout</a>
+                            </div>
+
+                        {% else %}
+                        
+                            <div class="form-group mb-3">
+                                <label for="inputEmail">Email</label>
+                                <input value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" type="inputEmail" required autofocus>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="inputPassword">Contrasenya</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="my-2 checkbox">
+                                <label><input type="checkbox" name="_remember_me"> Recorda'm</label>
+                            </div>
+
+                            <div class="form-group mb-3 d-flex justify-content-between align-items-center">
+                                <button type="submit" class="btn btn-primary">Iniciar sessió</button>
+                                <a href="">Recupera contrasenya</a>
+                            </div>
+
+                        {% endif %}
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+{% endblock %}

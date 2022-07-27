@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Llista d'entitats {{ parent() }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ parent() }}
+    <li class="breadcrumb-item active">Entitats</li>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+
+    <div class="table-responsive overflow-hidden p-1">
+           
+        <h4 class="border-bottom py-2 mb-4">Llista d'entitats</h4>
+        
+    <div class="row align-items-end justify-content-between">
+        <div class="col-3">
+            <a href="{{ path('entity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                    <title>Crear entitat</title>
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
+                </svg>
+                CREAR ENTITAT
+            </a>
+        </div>
+
+
+        <div class="col-7">
+                {% include 'includes/search.html.twig' %}
+        </div>
+    </div>
+
+
+    <div class="text-end">
+        <a href="{# {{ path('entity_forget_search') }} #}">Eliminar filtres</a>
+    </div>
+
+    {% include 'includes/entity_list.html.twig' %}
+
+
+    {%
+        include 'includes/paginator.html.twig' with {
+            'route' : 'entity_list',
+            'entidades' : 'activitats'
+        }
+    %}
+            
+    <script type="text/javascript" src="/js/entity_list.js"></script>
+                        
+{% endblock %}

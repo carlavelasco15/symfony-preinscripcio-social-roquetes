@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar {{ participant.name }} {{ parent() }}{% endblock %}
+
+{% block jsLinks %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Participants</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('activity_create') }}">Editar {{ participant.name }}</a></li>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+
+<h4 class="border-bottom py-2 mb-4">Modificar participant</h4>
+
+    {{ form_start(formulario) }}
+        <div class="row justify-content-center my-3">
+            <div class="col-8 row">
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.name, 'Nom del participant') }}
+                    {{ form_widget(formulario.name) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.dni, 'DNI') }}
+                    {{ form_widget(formulario.dni) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.phone, 'Teléfon') }}
+                    {{ form_widget(formulario.phone) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.email, 'Correu electrònic') }}
+                    {{ form_widget(formulario.email) }}
+                </div>
+                <div class="col-12 my-2">
+                    {{ form_label(formulario.comment, 'Comentari') }}
+                    {{ form_widget(formulario.comment) }}
+                </div>
+        {{ form_end(formulario) }}  
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.user.username }} {{ parent() }}{% endblock %}
+
+{% block breadcrumbs %}
+	{{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('participant_list') }}">Usuari (todo)</a></li>
+	<li class="breadcrumb-item active">{{ app.user.username }}</li>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+
+	<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		</head>
+		<body onload="javascript:cambiarPestanna(pestanas,pestana1);">
+	
+			<h4 class="border-bottom py-2 mb-4">Editar usuari</h4>
+
+			<div id="pestanas">
+				<ul id='lista' class="nav my-1 border-bottom">
+					<li id="pestana1" class="nav-item">
+						<a class="nav-link" id="link-pestana1" href='javascript:cambiarPestanna(pestanas,pestana1);'>Perfil</a>
+					</li>
+					<li id="pestana2" class="nav-item mx-1">
+						<a class="nav-link" id="link-pestana2" href='javascript:cambiarPestanna(pestanas,pestana2);'>Notificacions</a>
+					</li>
+					<li id="pestana3" class="nav-item mx-1">
+						<a class="nav-link" id="link-pestana3" href='javascript:cambiarPestanna(pestanas,pestana3);'>Entitats i permisos</a>
+					</li>
+
+				</ul>
+			</div>
+
+
+			{# TODO: 
+			
+				- Veure nomes els meus participants
+				- Veure els participants del meu servei
+				- Veure tots els participants
+				- Personalitzat
+			
+			 #}
+
+
+			<div class="my-4">
+				<div id="contenidopestanas" class="">
+					<div id="cpestana1" class="cpestanas">
+						
+						 {% if not app.user.isVerified %}
+							<div class="row alert alert-danger p-2 my-4" role="alert">
+								<p>La direcció de correu {{ app.user.email }} <b>no està verificada</b>.
+								Si us plau, fes clic <a href="{{ path('resend_verification') }}"> verificar el correu</a>
+								per completar el procés de registre i poder accedir a totes les funcionalitats de Prescripció Social Roquetes.</p>
+							</div>
+						{% endif %}
+
+						<div class="row">
+
+							<div class="col-8">
+
+								{{ form_start(formUserProfile) }}
+									<div class="row">
+										<div class="col-7 my-2">
+											{{ form_label(formUserProfile.username, 'Nom d\'usuari') }}
+											{{ form_widget(formUserProfile.username) }}
+										</div>
+										<div class="col-7 my-2">
+											{{ form_label(formUserProfile.email, 'Correu electrònic') }}
+											{{ form_widget(formUserProfile.email) }}
+										</div>
+
+										<div class="col-7 my-2">
+											{{ form_label(formUserProfile.picture, 'Imatge') }}
+											{{ form_widget(formUserProfile.picture) }}
+										</div>
+									</div>
+								{{ form_end(formUserProfile) }}
+
+							</div>
+
+							<div class="col-4 text-center">
+									<div class="">
+										<h6 class="my-3 text-uppercase">Previsualització</h6>
+											<figure class="my-2 p-2">
+												<img id="preview"
+													class="rounded border" style="max-width: 440px"
+													src="{{ app.user.picture ?
+														path('user_picture', {'picture':  app.user.picture}) :
+														path('user_picture', {'picture': 'default.png'}) }}"
+													style="object-fit:contain;max-height:400px">
+
+								{% if app.user.picture %}
+
+										<figcaption class="my-3 text-center">
+											Eliminar la imatge
+											<a href="{{ path('user_picture_delete', {'id': app.user.id}) }}">
+												<img src="{{ asset('res/delete.png')}}" height="30" width="30"
+													alt="Borrar carátula" title="Borrar carátula">
+											</a>
+										</figcaption>
+									</figure>
+
+								{% endif %}
+						</div>
+							</div>
+
+
+
+									
+
+							{# 
+								- Modificar contrasenya
+								- Modificar nom d'usuari
+								- Eliminar compte
+								- Verificar email
+							#}
+
+							{# 
+								- Notificacions email
+							#}
+					
+						</div>
+					</div>
+					<div id="cpestana2" class="cpestanas">
+
+						<table class="w-100">
+							{{ form_start(formNotifications) }}
+								
+								<div class="my-3 ms-5">
+									{{ form_widget(formNotifications.email_ent_new_prescription) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ent_waiting_list, 'Nom d\'usuari1') }}
+									{{ form_widget(formNotifications.email_ent_waiting_list) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ent_finished_activity, 'provaaa') }}
+									{{ form_widget(formNotifications.email_ent_finished_activity) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ent_attendance_form, 'Nom d\'usuari3') }}
+									{{ form_widget(formNotifications.email_ent_attendance_form) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ent_participant_rating, 'Nom d\'usuari4') }}
+									{{ form_widget(formNotifications.email_ent_participant_rating) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ser_new_activity, 'Nom d\'usuari5') }}
+									{{ form_widget(formNotifications.email_ser_new_activity) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ser_activity_ended, 'Nom d\'usuari5') }}
+									{{ form_widget(formNotifications.email_ser_activity_ended) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ser_attendance_form, 'Nom d\'usuari6') }}
+									{{ form_widget(formNotifications.email_ser_attendance_form) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ser_deleted_activity, 'Nom d\'usuari7') }}
+									{{ form_widget(formNotifications.email_ser_deleted_activity) }}
+								</div>
+								<div class="my-3 ms-5">
+									{{ form_label(formNotifications.email_ser_from_waiting_to_open, 'Nom d\'usuari7') }}
+									{{ form_widget(formNotifications.email_ser_from_waiting_to_open) }}
+								</div>
+								
+
+							{{ form_end(formNotifications) }}
+
+						</table>
+
+							{# <div class="col-8">
+								{{ form_start(formUserProfile) }}
+									<div class="row">
+										<div class="col-7 my-2">
+											{{ form_label(formUserProfile.username, 'Nom d\'usuari') }}
+											{{ form_widget(formUserProfile.username) }}
+										</div>
+										<div class="col-7 my-2">
+											{{ form_label(formUserProfile.email, 'Correu electrònic') }}
+											{{ form_widget(formUserProfile.email) }}
+										</div>
+
+										<div class="col-7 my-2">
+											{{ form_label(formUserProfile.picture, 'Imatge') }}
+											{{ form_widget(formUserProfile.picture) }}
+										</div>
+									</div>
+								{{ form_end(formUserProfile) }}
+							</div> #}
+							
+							
+					</div>
+					<div id="cpestana3" class="cpestanas">
+							holaaa3
+					
+					</div>
+				</div>
+			</div>
+		</body>
+	</html>
+</div>
+</div>
+</body>
+
+</html>
+{# FI BOX #}
+
+
+
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+	coll[i].addEventListener("click", function () {
+	this.classList.toggle("active");
+	var content = this.nextElementSibling;
+
+
+	if (content.style.display === "block") {
+		content.style.display = "none";
+		content.style.maxHeight = null;
+	} else {
+			content.style.display = "block";
+			content.style.maxHeight = content.scrollHeight + "px";
+	}
+	});
+}
+
+
+function cambiarPestanna(pestannas, pestanna) {
+
+		pestanna = document.getElementById(pestanna.id);
+		pestannaLink = document.getElementById('link-' + pestanna.id);
+		listaPestannas = document.getElementById(pestannas.id);
+
+		cpestanna = document.getElementById('c' + pestanna.id);
+		listacPestannas = document.getElementById('contenido' + pestannas.id);
+
+		i = 0;
+		while (typeof listacPestannas.getElementsByTagName('div')[i] != 'undefined') {
+		$(document).ready(function () {
+		$(listacPestannas.querySelectorAll('.cpestanas')[i]).css('display', 'none');
+		$(listaPestannas.getElementsByTagName('li')[i]).css('border-bottom', '0');
+		$(listaPestannas.getElementsByTagName('li')[i]).css('padding-bottom', '');
+		});
+		i += 1;
+		}
+
+		$(document).ready(function () {
+		$(cpestanna).css('display', '');
+		$(pestanna).css('border-bottom', '#2e7d32 2px solid');
+		$(pestanna).css('padding-bottom', '1px');
+		});
+
+}
+
+
+</script>
+
+    <script type="text/javascript" src="/js/user_list.js"></script>
+
+
+{% endblock %}

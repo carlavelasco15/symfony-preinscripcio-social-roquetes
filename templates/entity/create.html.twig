@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Llista d'entitats {{ parent() }}{% endblock %}
+
+
+
+{% block jsLinks %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
+   
+
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('entity_list') }}">Entitats</a></li>
+    <li class="breadcrumb-item active">Crear</li>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+    
+
+<h4 class="border-bottom py-2 mb-4">Crear entitat</h4>
+
+<div class="row">
+    <div class="col-8">
+        {{ form_start(formulario) }}
+            <div class="row">
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.name, 'Nom de l\'entitat') }}
+                    {{ form_widget(formulario.name) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.location, 'Localització') }}
+                    {{ form_widget(formulario.location) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.phone, 'Teléfon') }}
+                    {{ form_widget(formulario.phone) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.email, 'Correu') }}
+                    {{ form_widget(formulario.email) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.web, 'Pàgina web') }}
+                    {{ form_widget(formulario.web) }}
+                </div>
+                <div class="col-6 my-2">
+                    {{ form_label(formulario.picture, 'Imatge') }}
+                    {{ form_widget(formulario.picture) }}
+                </div>
+                <div class="col-12 my-2">
+                    {{ form_label(formulario.schedule, 'Horari') }}
+                    {{ form_widget(formulario.schedule) }}
+                </div>
+            </div>
+        {{ form_end(formulario) }}
+    </div>
+
+
+    <div class="col-4 text-center d-flex flex-column justify-content-around">
+            <div class="">
+                <h6 class="my-3 text-uppercase">Previsualització</h6>
+                <figure class="my-2 p-2">
+                    <img id="preview"
+                        class="rounded border" style="max-width: 440px"
+                        src="{{ asset(path('activity_picture', {'picture': 'default.png'})) }}"
+                        style="object-fit:contain;max-height:400px">
+</div>
+    </div>
+
+    <script type="text/javascript" src="/js/date_manager.js"></script>
+    <script type="text/javascript" src="/js/generate_calendar.js"></script>
+    <script type="text/javascript" src="/js/preview_image.js"></script>
+    <script type="text/javascript" src="/js/preview_sessions.js"></script>
+
+     <style>
+
+    .red {
+        border-color: rgb(233, 38, 38) !important;
+        border-width: 2px !important;
+        background-color: #ec38384a !important;   
+    }
+
+    .red {
+        border-color: rgb(233, 38, 38) !important;
+        border-width: 2px !important;
+        background-color: #ec38384a !important;   
+    }
+
+    .today {
+            border-color: #3b3e4263 !important;
+            border-width: 3px !important;
+            background-color: #bbb3b326 !important;
+        }
+
+</style>
+
+</div>
+
+{% endblock %}

@@ -91,10 +91,12 @@ class TicketStatus
         if ($this->ticket->removeElement($ticket)) {
             // set the owning side to null (unless already changed)
             if ($ticket->getTicketStatus() === $this) {
-                $ticket->setTicketStatus(null);
+                $ticket->getTicketStatus(null);
             }
         }
 
         return $this;
     }
 }
+
+

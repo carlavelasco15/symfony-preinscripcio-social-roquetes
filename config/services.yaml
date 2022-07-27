@@ -8,7 +8,12 @@ parameters:
     app.pages_results: 7
 
     app.activity_images: /resources/images/activities
+    app.user_images: /resources/images/users
+    app.entity_images: /resources/images/entities
+
     app.activity_images.root: "%kernel.project_dir%/%app.activity_images%"
+    app.user_images.root: "%kernel.project_dir%/%app.user_images%"
+    app.entity_images.root: "%kernel.project_dir%/%app.entity_images%"
 
 services:
     # default configuration for services in *this* file
@@ -33,7 +38,10 @@ services:
         arguments:
             $limit: '%app.pages_results%'
 
-    App\Service\SimpleSearchService:
+    App\Services\SimpleSearchService:
+    
+    App\Services\TicketStatusService:
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

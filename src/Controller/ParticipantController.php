@@ -7,7 +7,7 @@ use App\Entity\Search;
 use App\Form\ParticipantFormType;
 use App\Form\SearchFormType;
 use App\Repository\ParticipantRepository;
-use App\Service\SimpleSearchService;
+use App\Services\SimpleSearchService;
 use App\Services\PaginatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,9 +45,7 @@ class ParticipantController extends AbstractController
         $searchForm->handleRequest($request);
         $searchService->setSearch($busqueda);
 
-       
-
-        /* SEARCH SERVICE */
+    
         $participants = $paginator->paginate(
             $searchService->prepareQuery(),
             $pagina
@@ -67,7 +65,7 @@ class ParticipantController extends AbstractController
 
 
     
-    #[Route('/create', name: 'create')]
+    #[Route('/crear', name: 'create')]
     public function create(
                 Request $request,
                 ParticipantRepository $participantRepository
@@ -83,11 +81,37 @@ class ParticipantController extends AbstractController
             $this->addFlash('success', "Participant ". $participant->getName() ." amb éxit.");
             $participantRepository->add($participant, true);
 
-            return $this->redirectToRoute('activity_list');
+            return $this->redirectToRoute('participant_list');
         }
 
         return $this->renderForm('participant/create.html.twig', [
             'formulario' => $form
+        ]);
+    }
+
+    
+    #[Route('/editar/{id<\d+>}', name: 'edit')]
+    public function edit(
+                Participant $participant,
+                Request $request,
+                ParticipantRepository $participantRepository
+            ): Response
+    {
+
+        $form = $this->createForm(ParticipantFormType::class, $participant);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $this->addFlash('success', "Participant ". $participant->getName() ." editat amb éxit.");
+            $participantRepository->add($participant, true);
+
+            return $this->redirectToRoute('participant_list');
+        }
+
+        return $this->renderForm('participant/edit.html.twig', [
+            'formulario' => $form,
+            'participant' => $participant
         ]);
     }
 
