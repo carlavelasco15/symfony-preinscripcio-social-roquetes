@@ -90,19 +90,22 @@ class TicketController extends AbstractController
         
         $ticket = new Ticket();
         $ticketStatus = $ticketStatusRepository->find(GetTicketStatus::OPEN);
+        $ticketsOnActivityList = $ticketRepository->countTicketsPerActivity($activity);
         
         $ticket->setParticipant($participant)
                 ->setActivity($activity)
                 ->setTicketStatus($ticketStatus)
                 ->setIsDeleted(0);
+        
+        $boolWaitingList = $ticketsOnActivityList < $activity->getPlacesTotal() ? 0 : 1;
+        $ticket->setIsWaitingList($boolWaitingList);
 
-        $activity->setPlacesTaken($activity->getPlacesTaken() + 1);
-
-        $activityRepository->add($activity, true);
         $ticketRepository->add($ticket, true);
+
+        $activity->setPlacesTaken($ticketRepository->countTicketsPerActivity($activity));
+        $activityRepository->add($activity, true);
     
         return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
-
     }
 
 
@@ -128,15 +131,20 @@ class TicketController extends AbstractController
 
     $ticket = new Ticket();
     $ticketStatus = $ticketStatusRepository->find(GetTicketStatus::OPEN);
+    $ticketsOnActivityList = $ticketRepository->countTicketsPerActivity($activity);
 
+    $ticket->setParticipant($participant)
+            ->setActivity($activity)
+            ->setTicketStatus($ticketStatus)
+            ->setIsDeleted(0);
 
-    $ticket->setParticipant($participant);
-    $ticket->setActivity($activity);
-    $ticket->setTicketStatus($ticketStatus);
-    $activity->setPlacesTaken($activity->getPlacesTaken() + 1);
-
-    $activityRepository->add($activity, true);
+    $boolWaitingList = $ticketsOnActivityList < $activity->getPlacesTotal() ? 0 : 1;
+    $ticket->setIsWaitingList($boolWaitingList);
+    
     $ticketRepository->add($ticket, true);
+    
+    $activity->setPlacesTaken($ticketRepository->countTicketsPerActivity($activity));
+    $activityRepository->add($activity, true);
 
     return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
 }
@@ -153,5 +161,53 @@ class TicketController extends AbstractController
         $this->addFlash('success', 'Filtre eliminat.');
         return $this->redirectToRoute('participant_list');
     }
+
+
+       /**
+     * @Route("/espera/{id<\d+>}", name="toggle_waiting_list")
+     */     
+    public function toggleWaitingList(
+        Ticket $ticket,
+        TicketRepository $ticketRepository,
+        ActivityRepository $activityRepository
+        ): Response
+    {
+        $activity = $ticket->getActivity();
+        $isInWaitingList =  $ticket->isIsWaitingList() ? 0 : 1;
+        $ticket->setIsWaitingList($isInWaitingList);
+
+        $ticketRepository->add($ticket, true);
+
+        $mensaje = $isInWaitingList ? "El/la participant " . $ticket->getParticipant()->getName() . " ara es troba a la llista d'espera." : "El/la participant " . $ticket->getParticipant()->getName() . " ara es troba a la llista de partticipants.";
+        $this->addFlash('success', $mensaje);
+
+        $activity->setPlacesTaken($ticketRepository->countTicketsPerActivity($activity));
+        $activityRepository->add($activity, true);
+       
+        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+    }
+
+    /**
+     * @Route("/eliminar/{id<\d+>}", name="delete")
+     */
+    public function delete(
+                Ticket $ticket,
+                TicketRepository $ticketRepository,
+                ActivityRepository $activityRepository
+            ): Response
+    {
+        $activity = $ticket->getActivity();
+
+        $this->addFlash('success', "El ticket a l'activitat " . $activity->getName() . " s'ha eliminat correctament.");
+        $ticketRepository->remove($ticket, true);
+
+        $activity->setPlacesTaken($ticketRepository->countTicketsPerActivity($activity));
+        $activityRepository->add($activity, true);
+        
+        return $this->redirectToRoute('ticket_list', ['id' => $ticket->getParticipant()->getId()]);
+    }
+
+ 
+
 }
 

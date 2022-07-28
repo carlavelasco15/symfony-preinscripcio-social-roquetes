@@ -72,10 +72,12 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
     }
 }
 
+
+
 .btn-secondary{
     svg {
-        color: $dark;
-        fill: $dark;
+        color: #fff;
+        fill: #fff;
     }
 }
 

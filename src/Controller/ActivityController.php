@@ -42,7 +42,8 @@ class ActivityController extends AbstractController
                         PaginatorService $paginator,
                         SimpleSearchService $searchService,
                         TicketStatusService $ticketStatus,
-                        ActivityRepository $activityRepository): Response
+                        ActivityRepository $activityRepository,
+                        TicketRepository $ticketRepository): Response
     {
 
         $busqueda = new Search();
@@ -84,7 +85,8 @@ class ActivityController extends AbstractController
         return $this->renderForm('activity/list.html.twig', [
             'search' => $searchForm,
             'paginator' => $paginator,
-            'activities' => $activities
+            'activities' => $activities,
+            'ticketRepository' => $ticketRepository
         ]);
     }
 
@@ -187,7 +189,6 @@ class ActivityController extends AbstractController
 
 
             $activityRepository->add($activity, true);
-
             $this->addFlash('success', 'Activitat actualitzada correctament.');
 
             return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
@@ -209,8 +210,10 @@ class ActivityController extends AbstractController
         TicketRepository $ticketRepository
        ): Response
     {
+
         $participant = new Participant();
-        $tickets = $ticketRepository->searchTicketsByActivity($activity);
+        $tickets = $ticketRepository->ticketsPerActivity($activity);
+        $ticketsWaitingList = $ticketRepository->ticketsWaitingListPerActivity($activity);
         $newParticipantForm = $this->createForm(ParticipantFormType::class, $participant);
 
         $oldParticipantForm = $this->createForm(ActivityAddParticipantFormType::class, NULL, [
@@ -221,6 +224,7 @@ class ActivityController extends AbstractController
         return $this->renderForm('activity/show.html.twig', [
             'activity' => $activity,
             'tickets' => $tickets,
+            'ticketsWaitingList' => $ticketsWaitingList,
             'newParticipantForm' => $newParticipantForm,
             'oldParticipantForm' => $oldParticipantForm
         ]);
@@ -368,10 +372,11 @@ class ActivityController extends AbstractController
                 ->setActivity($activity)
                 ->setTicketStatus($ticketStatus)
                 ->setIsDeleted(0);
-        $activity->setPlacesTaken($activity->getPlacesTaken() + 1);
 
-        $activityRepository->add($activity, true);
         $ticketRepository->add($ticket, true);
+                
+        $activity->setPlacesTaken($ticketRepository->countTicketsPerActivity($activity));
+        $activityRepository->add($activity, true);
 
         return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
     }
@@ -389,16 +394,17 @@ class ActivityController extends AbstractController
     ): Response {
 
         $activity = $ticket->getActivity();
-        $ticketStatus = $ticketStatusRepository->find(6);
+        $ticketStatus = $ticketStatusRepository->find(GetTicketStatus::CLOSED_EQUIPMENT);
 
         /* TODO: FALTA FLASH */
 
         $ticket->setIsDeleted(1)
                 ->setTicketStatus($ticketStatus);
-        $activity->setPlacesTaken($activity->getPlacesTaken() - 1);
 
-        $activityRepository->add($activity, true);
         $ticketRepository->add($ticket, true);
+
+        $activity->setPlacesTaken($ticketRepository->countTicketsPerActivity($activity));
+        $activityRepository->add($activity, true);
 
         return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]); 
     }

@@ -40,13 +40,13 @@
                             en construcció
 
                             {# INICI ELIMINAR #}
-                            {# <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDelete{{participant.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalDelete{{ticket.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                                     <path d="M112 112l20 320c.95 18.49 14.4 32 32 32h184c17.67 0 30.87-13.51 32-32l20-320" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
                                     <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 112h352" />
                                     <path d="M192 112V72h0a23.93 23.93 0 0124-24h80a23.93 23.93 0 0124 24h0v40M256 176v224M184 176l8 224M328 176l-8 224" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
                                 </svg>
-                            </button> #}
+                            </button>
                             {# FI ELIMINAR #}
 
 
@@ -55,21 +55,21 @@
 
                 
                 <!-- Modal -->
-                <div class="modal fade" id="modalDelete{{participant.id}}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteTitle{{participant.id}}" aria-hidden="true">
+                <div class="modal fade" id="modalDelete{{ticket.id}}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteTitle{{ticket.id}}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">{{ participant.name }}</h5>
+                            <h5 class="modal-title" id="exampleModalLongTitle">{{ ticket.getActivity.name }}</h5>
                             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>            
                         </div>
                         <div class="modal-body">
-                            Vols eliminar aquest particpant?
+                            Vols eliminar aquest tiquet i la seva informació associada?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 CANCELAR
                             </button>
-                            <a type="button" class="btn special-btn" href="{{ path("participant_delete", {'id' : participant.id}) }}">
+                            <a type="button" class="btn special-btn" href="{{ path("ticket_delete", {'id' : ticket.id}) }}">
                                 ELIMINAR
                             </a>
                         </div>

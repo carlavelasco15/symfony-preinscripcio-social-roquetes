@@ -40,6 +40,11 @@ class Ticket
      */
     private $is_deleted;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $is_waiting_list;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +94,18 @@ class Ticket
     public function setIsDeleted(bool $is_deleted): self
     {
         $this->is_deleted = $is_deleted;
+
+        return $this;
+    }
+
+    public function isIsWaitingList(): ?bool
+    {
+        return $this->is_waiting_list;
+    }
+
+    public function setIsWaitingList(?bool $is_waiting_list): self
+    {
+        $this->is_waiting_list = $is_waiting_list;
 
         return $this;
     }

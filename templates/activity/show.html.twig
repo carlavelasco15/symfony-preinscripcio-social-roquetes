@@ -40,6 +40,9 @@
 					<li id="pestana4" class="nav-item mx-1">
 						<a class="nav-link" id="link-pestana4" href='javascript:cambiarPestanna(pestanas,pestana4);'>Llista</a>
 					</li>
+					<li id="pestana5" class="nav-item mx-1">
+						<a class="nav-link" id="link-pestana5" href='javascript:cambiarPestanna(pestanas,pestana5);'>Llista d'espera</a>
+					</li>
 				</ul>
 			</div>
 			<div class="contenedor my-4 p-3">
@@ -264,13 +267,30 @@
 					<div id="cpestana4" class="cpestanas">
 						<div class="m-2 align-items-center">
 							<div class="d-flex justify-content-between align-items-center">
-								<h4 class="mb-4 pb-2 border-bottom">Llista de tiquets</h4>
+								<h4 class="mb-4 pb-2 border-bottom">Llista de participants</h4>
 								<div class="d-flex align-items-center">
 									<h6 class="m-4">DISPONIBILITAT</h6>
 									<h5 class="p-3 px-5 border fw-3 disponibility">{{ activity.placesTaken }} / {{ activity.placesTotal }}</h5>
 								</div>
 							</div>
 							{% include '/includes/ticket_list_activity.html.twig' %}
+						</div>
+					</div>
+
+					<div id="cpestana5" class="cpestanas">
+						<div class="m-2 align-items-center">
+							<div class="d-flex justify-content-between align-items-center">
+								<h4 class="mb-4 pb-2 border-bottom">Llista d'espera</h4>
+								<div class="d-flex align-items-center">
+									<h6 class="m-4">DISPONIBILITAT</h6>
+									<h5 class="p-3 px-5 border fw-3 disponibility">{{ activity.placesTaken }} / {{ activity.placesTotal }}</h5>
+								</div>
+							</div>
+							{% include '/includes/ticket_list_activity.html.twig' with {
+									'waiting' : true,
+									'tickets' : ticketsWaitingList
+								}
+							%}
 						</div>
 					</div>
 

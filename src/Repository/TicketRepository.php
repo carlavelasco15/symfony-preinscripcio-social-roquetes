@@ -63,16 +63,47 @@ class TicketRepository extends ServiceEntityRepository
     }
 
 
-    public function searchTicketsByActivity($activity): array {
+    public function ticketsPerActivity($activity): array {
         $consulta = $this->getEntityManager()->createQuery(
             "SELECT p
             FROM App\Entity\Ticket p
             WHERE p.activity = :id
             AND p.is_deleted = 0
+            AND p.is_waiting_list = 0
             ORDER BY p.id ASC"
         )
         ->setParameter('id', $activity)
         ->getResult();
+
+        return $consulta;
+    }
+
+    public function ticketsWaitingListPerActivity($activity): array {
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT p
+            FROM App\Entity\Ticket p
+            WHERE p.activity = :id
+            AND p.is_deleted = 0
+            AND p.is_waiting_list = 1
+            ORDER BY p.id ASC"
+        )
+        ->setParameter('id', $activity)
+        ->getResult();
+
+        return $consulta;
+    }
+
+    public function countTicketsPerActivity($activity) {
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT count(p)
+            FROM App\Entity\Ticket p
+            WHERE p.activity = :id
+            AND p.is_deleted = 0
+            AND p.is_waiting_list = 0"
+        )
+
+        ->setParameter('id', $activity)
+        ->getSingleScalarResult();
 
         return $consulta;
     }
