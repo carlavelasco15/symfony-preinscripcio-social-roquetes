@@ -170,36 +170,21 @@
 									{{ form_widget(formNotifications.email_ser_from_waiting_to_open) }}
 								</div>
 								
-
 							{{ form_end(formNotifications) }}
 
 						</table>
-
-							{# <div class="col-8">
-								{{ form_start(formUserProfile) }}
-									<div class="row">
-										<div class="col-7 my-2">
-											{{ form_label(formUserProfile.username, 'Nom d\'usuari') }}
-											{{ form_widget(formUserProfile.username) }}
-										</div>
-										<div class="col-7 my-2">
-											{{ form_label(formUserProfile.email, 'Correu electrònic') }}
-											{{ form_widget(formUserProfile.email) }}
-										</div>
-
-										<div class="col-7 my-2">
-											{{ form_label(formUserProfile.picture, 'Imatge') }}
-											{{ form_widget(formUserProfile.picture) }}
-										</div>
-									</div>
-								{{ form_end(formUserProfile) }}
-							</div> #}
-							
 							
 					</div>
 					<div id="cpestana3" class="cpestanas">
-							holaaa3
-					
+						{% set equipments = app.user.getEquipment %}
+							<div>
+								{% if equipments|length > 0 %}
+									{% for equipment in equipments %}
+										{{equipment.name}}<br>
+									{% endfor %}
+								{% endif %}
+							</div>
+
 					</div>
 				</div>
 			</div>

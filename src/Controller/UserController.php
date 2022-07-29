@@ -32,7 +32,9 @@ class UserController extends AbstractController
         $fichero = $user->getPicture();
 
         $formUserProfile = $this->createForm(UserFormType::class, $user);
-        $formNotifications = $this->createForm(UserNotificationFormType::class, $user);
+        $formNotifications = $this->createForm(UserNotificationFormType::class, $user, [
+            'action' => $this->generateUrl('user_edit_notification'),
+        ]);
         $formUserProfile->handleRequest($request);
 
         
@@ -62,6 +64,32 @@ class UserController extends AbstractController
             'formUserProfile' => $formUserProfile,
             'formNotifications' => $formNotifications
         ]);
+    }
+
+
+    #[Route('/editar/notificacion', name: 'edit_notification')]
+    public function editNotification(
+        Request $request,
+        UserRepository $userRepository,
+        FileService $uploader
+    ): Response
+    {
+        /* $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); */
+
+        $user = $this->getUser();
+
+        $formNotifications = $this->createForm(UserNotificationFormType::class,$user);
+        $formNotifications->handleRequest($request);
+
+        
+        if($formNotifications->isSubmitted() && $formNotifications->isValid()) {
+
+        $userRepository->add($user, true);
+        $this->addFlash('success', "L'usuari s'ha modificat correctament.");
+
+        }
+        
+        return $this->redirectToRoute('user_edit');
     }
 
     #[Route('/imatge/{picture}', name: 'picture')]
