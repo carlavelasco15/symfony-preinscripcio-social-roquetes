@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Entity;
 use App\Entity\User;
+use App\Entity\UserEntity;
 use App\Form\RegistrationFormType;
+use App\Repository\EntityRepository;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,15 +28,18 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+
+    #[Route('/register/{id<\d+>}', name: 'register')]
+    public function register(Entity $entity,
+                            Request $request, 
+                            UserPasswordHasherInterface $userPasswordHasher, 
+                            EntityManagerInterface $entityManager): Response
     {
+        $userEntity = new UserEntity();
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,
@@ -41,7 +47,14 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $entityManager->persist($user);
+            /* $user->addUserEntity($userEntity);
+            $entity->addUserEntity($userEntity); */
+
+            $userEntity->setEntity($entity);
+            $userEntity->setUser($user);
+
+            $entityManager->persist($userEntity);
+            /* $entityManager->persist($entity); */
             $entityManager->flush();
 
             // generate a signed url and email it to the user
@@ -49,14 +62,11 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('noreply@prescripciosocialroquetes.cat', 'Registre d\'usuari'))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Confirmació de correu')
                     ->htmlTemplate('email/register_verification.html.twig')
             );
-            // do anything else you need here, like send an email
-
             return $this->redirectToRoute('activity_list');
         }
-
         return $this->render('user/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
@@ -67,17 +77,11 @@ class RegistrationController extends AbstractController
     public function verifyUserEmail(Request $request, UserRepository $userRepository): Response
     {
         $id = $request->get('id');
-
-        if (null === $id) {
+        if (null === $id) 
             return $this->redirectToRoute('register');
-        }
-
         $user = $userRepository->find($id);
-
-        if (null === $user) {
+        if (null === $user) 
             return $this->redirectToRoute('register');
-        }
-
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
@@ -86,8 +90,6 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('register');
         }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Tu email ha sido verificado.');
 
         return $this->redirectToRoute('register');
@@ -98,21 +100,17 @@ class RegistrationController extends AbstractController
     public function resendVerificationEmail(Request $request, UserRepository $userRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $user = $this->getUser();
-
          // generate a signed url and email it to the user
          $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
             (new TemplatedEmail())
                 ->from(new Address('noreply@prescripciosocialroquetes.cat', 'Registre d\'usuari'))
                 ->to($user->getEmail())
-                ->subject('Please Confirm your Email')
+                ->subject('Confirmació de correu')
                 ->htmlTemplate('email/register_verification.html.twig')
         );
         $mensaje = "Operació realitzada, revista el teu email y fés clic a l'enllaç per completar la operació de registre. El missatge d'advertencia desapareixerà un cop completat el procés.";
         $this->addFlash('success', $mensaje);
-
-         // do anything else you need here, like send an email
         return $this->redirectToRoute('user_edit', [
             'id' => $user->getId()
         ]);

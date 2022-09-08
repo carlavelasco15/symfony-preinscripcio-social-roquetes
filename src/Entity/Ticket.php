@@ -45,6 +45,11 @@ class Ticket
      */
     private $is_waiting_list;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tickets")
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +111,18 @@ class Ticket
     public function setIsWaitingList(?bool $is_waiting_list): self
     {
         $this->is_waiting_list = $is_waiting_list;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

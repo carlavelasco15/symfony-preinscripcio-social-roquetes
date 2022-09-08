@@ -5,25 +5,26 @@
 {% block breadcrumbs %}
 	{{ parent() }}
 	<li class="breadcrumb-item">
-		<a href="{{ path('activity_list') }}">Activitats</a>
+		{% if (is_granted("ROLE_PRESCRIPTOR")) %}
+			<a href=" {{ path('activity_list_prescriptor') }}">Activitats per prescriure</a>
+		{% elseif (is_granted("ROLE_EDITOR")) %}
+			<a href=" {{ path('activity_list_editor') }}">Activitats de l'entitat</a>
+		{% endif %}
 	</li>
 	<li class="breadcrumb-item active">{{activity.name}}</li>
 {% endblock %}
 
 {% block main %}
  	{{ parent() }}
-	
 	{% set entity = activity.getEntity() %}
-
+	
 	<html>
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		</head>
 		<body onload="javascript:cambiarPestanna(pestanas,pestana1);">
-	
-			<h4 class="border-bottom py-2 mb-4">{{activity.name}}</h4>
-
+			<h4 class="border-bottom py-2 mb-3">{{activity.name}}</h4>
 			<div id="pestanas">
 				<ul id='lista' class="nav my-1 border-bottom">
 					<li id="pestana1" class="nav-item">
@@ -50,7 +51,7 @@
 					<div id="cpestana1" class="cpestanas">
 						<div class="row m-2 align-items-center">
 							<div class="col-6">
-								<h4 class="mb-4 pb-2 border-bottom">Dades de l'activitat</h4>
+								<h4 class="mb-4 pb-2">Dades de l'activitat</h4>
 								<h5>Informació general</h5>
 								<p class="mb-1 mx-3">
 									<b>Places:</b>
@@ -77,7 +78,7 @@
 									-
 									{{ activity.endDate|date('d/m/Y') }}</p>
 								<p class="mb-1 mx-3">
-									<b>Horiari:</b>
+									<b>Horari:</b>
 									{{ activity.schedule }}</p>
 								<p class="mb-1 mx-3">(Els horaris poden estar subjectes a canvi.)</p>
 								<hr>
@@ -100,15 +101,17 @@
 							</div>
 						</div>
 					</div>
-
 					{% if entity %}
 					<div id="cpestana2" class="cpestanas">
 						{# INICI CAIXA DADES CENTRE #}
 						<div class="row m-2 align-items-center">
 							<div class="col-5 align-self-start">
-							
-								<h4 class="mb-4 pb-2 border-bottom">Dades del centre</h4>
-								
+								<h4 class="mb-4 pb-2">Dades del centre</h4>
+								{% if entity.name %}
+									<span class="menu-item-wrap">
+										{{ entity.name }}
+									</span>
+								{% endif %}
 								{% if entity.email %}
 									<span class="menu-item-wrap">
 										<div class="fav-apps__app-icon doc-outline">
@@ -120,7 +123,6 @@
 										{{ entity.email }}
 									</span>
 								{% endif %}
-
 								{% if entity.phone %}
 									<span class="menu-item-wrap">
 										<div class="fav-apps__app-icon doc-outline">
@@ -131,7 +133,6 @@
 											{{ entity.phone }}
 									</span>
 								{% endif %}
-
 								{% if entity.location %}
 									<span class="menu-item-wrap">
 										<div class="fav-apps__app-icon doc-outline">
@@ -142,7 +143,6 @@
 										{{ entity.location }}
 									</span>
 								{% endif %}
-
 								{% if entity.schedule %}
 									<span class="menu-item-wrap">
 										<div class="fav-apps__app-icon doc-outline">
@@ -155,34 +155,24 @@
 									</span>
 								{% endif %}
 							</div>
-
 							<div class="col-7 text-center">
 								<img src="{{ asset(entity.picture ? path('entity_picture', {'picture': entity.picture}) : path('entity_picture', {'picture': 'default.png'})) }}" style="object-fit:contain;max-height:350px;width:100%;" alt="Imagen de {{entity.name}}" title="Imagen de {{entity.name}}">
 							</div>
-							
 						</div>
-					
 					</div>
 					{% endif %}
-
 					<div id="cpestana3" class="cpestanas">
 						<div class="m-2 align-items-center row">
-
-					
-
-							<h4 class="mb-4 pb-2 border-bottom">Crea un tiquet</h4>
+							<h4 class="mb-4 pb-2">Crea un tiquet</h4>
 							<div class="row m-3 align-items-center">
 								<div class="mx-3">
-							
 									<div class="panel-general border row justify-content-center g-0 my-3 rounded">
-						
 										<div class="panel-heading border p-3 collapsible">
 											<button class="panel-link text-start" data-toggle="collapse">
 												<h5>Participant antic</h5>
 												<p class="m-0">Crea un tiquet per a un participant que ja estiqui registrat al sistema.</p>
 											</button>
 										</div>
-								
 										<div class="panel-body content row col-7">
 											<div class="row justify-content-center align-content-center my-5">
 												{{ form_start(oldParticipantForm) }}
@@ -200,17 +190,8 @@
 												</div>
 											</div>
 										</div>
-							
-
 									</div>
-						
-
-
-						
-									<div
-										class="panel-general border row justify-content-center g-0 my-3 rounded">
-
-							
+									<div class="panel-general border row justify-content-center g-0 my-3 rounded">
 										<div class="panel-heading border p-3 collapsible">
 											<button class="panel-link text-start" data-toggle="collapse">
 												<h5>Nou participant</h5>
@@ -219,8 +200,6 @@
 												*Aquesta operació crea un participant i se li adjudica un tiquet de l'activitat corresponent.</p>
 											</button>
 										</div>
-						
-
 										<div class="panel-body content col-7">
 											<div class="row justify-content-center align-content-center my-5">
 												<div class="col">
@@ -255,19 +234,15 @@
 												</div>
 											</div>
 										</div>
-							
-
 									</div>
-						
 								</div>
 							</div>
 						</div>
 					</div>
-
 					<div id="cpestana4" class="cpestanas">
 						<div class="m-2 align-items-center">
 							<div class="d-flex justify-content-between align-items-center">
-								<h4 class="mb-4 pb-2 border-bottom">Llista de participants</h4>
+								<h4 class="mb-4 pb-2">Llista de participants</h4>
 								<div class="d-flex align-items-center">
 									<h6 class="m-4">DISPONIBILITAT</h6>
 									<h5 class="p-3 px-5 border fw-3 disponibility">{{ activity.placesTaken }} / {{ activity.placesTotal }}</h5>
@@ -276,24 +251,23 @@
 							{% include '/includes/ticket_list_activity.html.twig' %}
 						</div>
 					</div>
-
 					<div id="cpestana5" class="cpestanas">
 						<div class="m-2 align-items-center">
 							<div class="d-flex justify-content-between align-items-center">
-								<h4 class="mb-4 pb-2 border-bottom">Llista d'espera</h4>
+								<h4 class="mb-4 pb-2">Llista d'espera</h4>
 								<div class="d-flex align-items-center">
 									<h6 class="m-4">DISPONIBILITAT</h6>
 									<h5 class="p-3 px-5 border fw-3 disponibility">{{ activity.placesTaken }} / {{ activity.placesTotal }}</h5>
 								</div>
 							</div>
-							{% include '/includes/ticket_list_activity.html.twig' with {
+							{% include '/includes/ticket_list_activity.html.twig' with 
+								{
 									'waiting' : true,
 									'tickets' : ticketsWaitingList
 								}
 							%}
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</body>
@@ -305,9 +279,8 @@
 </html>
 {# FI BOX #}
 
-
-
 <script>
+
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
@@ -316,46 +289,42 @@ for (i = 0; i < coll.length; i++) {
 	this.classList.toggle("active");
 	var content = this.nextElementSibling;
 
-
 	if (content.style.display === "block") {
 		content.style.display = "none";
 		content.style.maxHeight = null;
 	} else {
-			content.style.display = "block";
-			content.style.maxHeight = content.scrollHeight + "px";
+		content.style.display = "block";
+		content.style.maxHeight = content.scrollHeight + "px";
 	}
 	});
 }
 
 
 function cambiarPestanna(pestannas, pestanna) {
+	pestanna = document.getElementById(pestanna.id);
+	pestannaLink = document.getElementById('link-' + pestanna.id);
+	listaPestannas = document.getElementById(pestannas.id);
+	cpestanna = document.getElementById('c' + pestanna.id);
+	listacPestannas = document.getElementById('contenido' + pestannas.id);
 
-		pestanna = document.getElementById(pestanna.id);
-		pestannaLink = document.getElementById('link-' + pestanna.id);
-		listaPestannas = document.getElementById(pestannas.id);
-
-		cpestanna = document.getElementById('c' + pestanna.id);
-		listacPestannas = document.getElementById('contenido' + pestannas.id);
-
-		i = 0;
-		while (typeof listacPestannas.getElementsByTagName('div')[i] != 'undefined') {
+	i = 0;
+	while (typeof listacPestannas.getElementsByTagName('div')[i] != 'undefined') 
+	{
 		$(document).ready(function () {
-		$(listacPestannas.querySelectorAll('.cpestanas')[i]).css('display', 'none');
-		$(listaPestannas.getElementsByTagName('li')[i]).css('border-bottom', '0');
-		$(listaPestannas.getElementsByTagName('li')[i]).css('padding-bottom', '');
+			$(listacPestannas.querySelectorAll('.cpestanas')[i]).css('display', 'none');
+			$(listaPestannas.getElementsByTagName('li')[i]).css('border-bottom', '0');
+			$(listaPestannas.getElementsByTagName('li')[i]).css('padding-bottom', '');
 		});
 		i += 1;
-		}
+	}
 
-		$(document).ready(function () {
+	$(document).ready(function () {
 		$(cpestanna).css('display', '');
 		$(pestanna).css('border-bottom', '#2e7d32 2px solid');
 		$(pestanna).css('padding-bottom', '1px');
-		});
+	});
 
 }
-
-
 </script>
 
 <script type="text/javascript" src="/js/activity_list.js"></script>

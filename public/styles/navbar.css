@@ -62,7 +62,8 @@
   font-weight: 700;
 }
 
-.ps-navbar .nav-link:hover {
+.ps-navbar .nav-link:hover,
+.ps-navbar .nav-link.active {
   color: #000 !important;
   background: #fcd734;
   -webkit-transition: all .4s;

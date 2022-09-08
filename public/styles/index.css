@@ -33,7 +33,7 @@ form.thumbTile, form.thumbTile * {
   transition: 0.4s;
 }
 
-.swiper-slide:hover {
+.entities .card:hover {
   cursor: pointer;
   -webkit-box-shadow: 4px 4px 10px #ccc;
           box-shadow: 4px 4px 10px #ccc;

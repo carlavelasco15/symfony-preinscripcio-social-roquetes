@@ -4,40 +4,33 @@
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item active">Participants</li>
+    <li class="breadcrumb-item active">Participants del servei</li>
 {% endblock %}
 
 {% block main %}
     {{ parent() }}
 
     <div class="table-responsive overflow-hidden p-1">
-           
-        <h4 class="border-bottom py-2 mb-4">Llista de participants</h4>
-        
-    <div class="row align-items-end justify-content-between">
-        <div class="col-3">
-            <a href="{{ path('participant_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                    <title>Afegir participant</title>
-                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
-                </svg>
-                CREAR PARTICIPANT
-            </a>
+        <h4 class="border-bottom py-2 mb-3">Llista de participants</h4>
+        <div class="row align-items-end justify-content-between">
+            <div class="col-3">
+                <a href="{{ path('participant_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                        <title>Afegir participant</title>
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="44" d="M256 112v288M400 256H112"/>
+                    </svg>
+                    CREAR PARTICIPANT
+                </a>
+            </div>
+            <div class="col-7">
+                    {% include 'includes/search.html.twig' %}
+            </div>
         </div>
-
-
-        <div class="col-7">
-                {% include 'includes/search.html.twig' %}
+        <div class="text-end px-4 mt-1">
+            <a href="{{ path('participant_forget_search') }}">Eliminar filtres</a>
         </div>
-    </div>
-
-
-    <div class="text-end">
-        <a href="{{ path('participant_forget_search') }}">Eliminar filtres</a>
-    </div>
 
     {% include 'includes/participant_list.html.twig' %}
-
 
     {%
         include 'includes/paginator.html.twig' with {
@@ -45,6 +38,5 @@
             'entidades' : 'participants'
         }
     %}
-            
-                        
+                                    
 {% endblock %}

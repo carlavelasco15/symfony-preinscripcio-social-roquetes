@@ -4671,6 +4671,18 @@ fieldset:disabled .btn {
   list-style: none;
 }
 
+.nav__logo-email {
+  width: 56px;
+  height: 56px;
+}
+
+.navbar__title-email {
+  display: inline;
+  color: #fff;
+  font-size: 1.6rem;
+  margin: 0;
+}
+
 .navbar-nav .nav-link {
   padding-right: 0;
   padding-left: 0;
@@ -12562,6 +12574,7 @@ label[for^="activity_form_weekday_"] {
   font-size: 1rem;
   font-style: italic;
   color: #f5f5f5;
+  line-height: 1.5rem;
 }
 
 .user__nav .profile-card .primary-profile-info .name {
@@ -12622,4 +12635,23 @@ label[for^="activity_form_weekday_"] {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+
+.entities .card:hover {
+  cursor: pointer;
+  -webkit-box-shadow: 4px 4px 10px #ccc;
+          box-shadow: 4px 4px 10px #ccc;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+}
+
+.entities .card-body {
+  color: #000 !important;
+}
+
+.entities a {
+  text-decoration: none;
 }

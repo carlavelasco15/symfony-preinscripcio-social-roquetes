@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.admin_email: "%env(ADMIN_EMAIL)%"
-    app.pages_results: 7
+    app.pages_results: 10
 
     app.activity_images: /resources/images/activities
     app.user_images: /resources/images/users
@@ -42,6 +42,11 @@ services:
     
     App\Services\TicketStatusService:
 
+    App\EventListener\SecurityInteractiveListener:
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login }
+
+    
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

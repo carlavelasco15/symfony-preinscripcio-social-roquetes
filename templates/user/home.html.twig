@@ -18,7 +18,7 @@
 		</head>
 		<body onload="javascript:cambiarPestanna(pestanas,pestana1);">
 	
-			<h4 class="border-bottom py-2 mb-4">Editar usuari</h4>
+			<h4 class="border-bottom py-2 mb-3">Editar usuari</h4>
 
 			<div id="pestanas">
 				<ul id='lista' class="nav my-1 border-bottom">
@@ -129,57 +129,68 @@
 
 						<table class="w-100">
 							{{ form_start(formNotifications) }}
-								
-								<div class="my-3 ms-5">
-									{{ form_widget(formNotifications.email_ent_new_prescription) }}
+
+					
+								<div class="mt-5">
+									<h5>Editor</h5>
+									<div class="my-3 ms-5">
+										{{ form_widget(formNotifications.email_ent_new_prescription) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ent_waiting_list, 'Nom d\'usuari1') }}
+										{{ form_widget(formNotifications.email_ent_waiting_list) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ent_finished_activity, 'provaaa') }}
+										{{ form_widget(formNotifications.email_ent_finished_activity) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ent_attendance_form, 'Nom d\'usuari3') }}
+										{{ form_widget(formNotifications.email_ent_attendance_form) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ent_participant_rating, 'Nom d\'usuari4') }}
+										{{ form_widget(formNotifications.email_ent_participant_rating) }}
+									</div>
 								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ent_waiting_list, 'Nom d\'usuari1') }}
-									{{ form_widget(formNotifications.email_ent_waiting_list) }}
+							
+							
+								<div class="mt-5">
+									<h5>Prescriptor</h5>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ser_new_activity, 'Nom d\'usuari5') }}
+										{{ form_widget(formNotifications.email_ser_new_activity) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ser_activity_ended, 'Nom d\'usuari5') }}
+										{{ form_widget(formNotifications.email_ser_activity_ended) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ser_attendance_form, 'Nom d\'usuari6') }}
+										{{ form_widget(formNotifications.email_ser_attendance_form) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ser_deleted_activity, 'Nom d\'usuari7') }}
+										{{ form_widget(formNotifications.email_ser_deleted_activity) }}
+									</div>
+									<div class="my-3 ms-5">
+										{{ form_label(formNotifications.email_ser_from_waiting_to_open, 'Nom d\'usuari7') }}
+										{{ form_widget(formNotifications.email_ser_from_waiting_to_open) }}
+									</div>
 								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ent_finished_activity, 'provaaa') }}
-									{{ form_widget(formNotifications.email_ent_finished_activity) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ent_attendance_form, 'Nom d\'usuari3') }}
-									{{ form_widget(formNotifications.email_ent_attendance_form) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ent_participant_rating, 'Nom d\'usuari4') }}
-									{{ form_widget(formNotifications.email_ent_participant_rating) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ser_new_activity, 'Nom d\'usuari5') }}
-									{{ form_widget(formNotifications.email_ser_new_activity) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ser_activity_ended, 'Nom d\'usuari5') }}
-									{{ form_widget(formNotifications.email_ser_activity_ended) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ser_attendance_form, 'Nom d\'usuari6') }}
-									{{ form_widget(formNotifications.email_ser_attendance_form) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ser_deleted_activity, 'Nom d\'usuari7') }}
-									{{ form_widget(formNotifications.email_ser_deleted_activity) }}
-								</div>
-								<div class="my-3 ms-5">
-									{{ form_label(formNotifications.email_ser_from_waiting_to_open, 'Nom d\'usuari7') }}
-									{{ form_widget(formNotifications.email_ser_from_waiting_to_open) }}
-								</div>
-								
+					
+
 							{{ form_end(formNotifications) }}
 
 						</table>
 							
 					</div>
 					<div id="cpestana3" class="cpestanas">
-						{% set equipments = app.user.getEquipment %}
+						{% set equipments = app.user.getUserEntities %}
 							<div>
 								{% if equipments|length > 0 %}
 									{% for equipment in equipments %}
+										{% set equipment = equipment.getEntity() %}
 										{{equipment.name}}<br>
 									{% endfor %}
 								{% endif %}

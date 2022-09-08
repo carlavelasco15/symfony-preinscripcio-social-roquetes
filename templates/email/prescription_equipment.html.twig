@@ -1,0 +1,33 @@
+{% extends 'email.html.twig' %}
+
+{% block title %}Prescripció{% endblock %}
+
+{% block main %}
+
+    <div class="m-3 p-3 bg-white">
+
+        <h2 class="mb-5">Nova prescripció a {{activity.name}}</h2>
+
+        <h5>Dades del participant</h5>
+        <p class="mb-1"><b>Nom:</b> {{participant.name}}.</p>
+        <p class="mb-1"><b>Telèfon:</b> {{participant.phone}}.</p>
+        {% if participant.email %}
+            <p><b>Correu electrónic:</b> {{participant.email}}</p>
+        {% endif %}
+
+        <br>
+
+        <h5>Dades de l'activitat</h5>
+        <p class=""><b>Nom:</b> {{activity.name}}.</p>
+
+        <p>Si vols acccedir al web de prescripció social, utilitza aquest enllaç:</p>
+        <div class="text-center p-3 m-3">
+            <a class="btn btn-primary" href="{{path('activity_list_editor')}}">
+                Accedir al web
+            </a>.
+        </div>
+        <p>Gràcies.</p>
+
+    </div>
+    
+{% endblock %}

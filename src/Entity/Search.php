@@ -12,6 +12,7 @@ class Search
     private $limit = 100;
     private $entity = NULL;
     private $entityId = NULL;
+    private $role = '';
 
     
     public function getEntity() : ?string
@@ -108,6 +109,19 @@ class Search
     public function setField($field): self
     {
         $this->field = $field;
+
+        return $this;
+    }
+
+    public function getRole() : ?string
+    {
+        return $this->role;
+    }
+
+ 
+    public function setRole($role): self
+    {
+        $this->role = $role;
 
         return $this;
     }

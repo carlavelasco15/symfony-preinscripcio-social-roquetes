@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use phpDocumentor\Reflection\Types\Boolean;
 use Doctrine\ORM\Query;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @extends ServiceEntityRepository<Activity>
@@ -18,9 +19,17 @@ use Doctrine\ORM\Query;
  */
 class ActivityRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $requestStack, $entityRepository, $userEntityRepository;
+
+    public function __construct(ManagerRegistry $registry,
+                                RequestStack $requestStack,
+                                UserEntityRepository $userEntityRepository,
+                                EntityRepository $entityRepository,)
     {
         parent::__construct($registry, Activity::class);
+        $this->requestStack = $requestStack;
+        $this->userEntityRepository = $userEntityRepository;
+        $this->entityRepository = $entityRepository;
     }
 
     public function add(Activity $entity, bool $flush = false): void
@@ -41,14 +50,14 @@ class ActivityRepository extends ServiceEntityRepository
         }
     }
 
-    public function searchActivityQuery($search): Query {
+    public function searchActivityQueryPrescriptor($search): Query {
         $consulta = $this->getEntityManager()->createQuery(
             "SELECT p
             FROM App\Entity\Activity p
             WHERE p.".$search->getField()." LIKE :valor
             AND p.is_deleted = 0
+            AND p.is_visible = 1
             ORDER BY p.id ASC")
-
 
         ->setParameter('valor', '%'. $search->getValue() .'%')
         ->setMaxResults($search->getLimit());
@@ -57,30 +66,32 @@ class ActivityRepository extends ServiceEntityRepository
     }
 
 
+    public function searchActivityQueryEditor($search): Query {
+
+        if($user_entity_id = $this->requestStack->getSession()->get('user_entity_id')) 
+            $entity_id = $this->userEntityRepository->find($user_entity_id)->getEntity()->getId();
+
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT p
+            FROM App\Entity\Activity p
+            WHERE p.".$search->getField()." LIKE :valor
+            AND p.entity = ".$entity_id."
+            AND p.is_deleted = 0
+            ORDER BY p.id ASC")
+
+        ->setParameter('valor', '%'. $search->getValue() .'%')
+        ->setMaxResults($search->getLimit());
+
+        return $consulta;
+    }
 
 
-//    /**
-//     * @return Activity[] Returns an array of Activity objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function searchActivityQueryEditorAndPrescriptor($search): array {
+       
+        $editor = $this->searchActivityQueryEditor($search);
+        $prescriptor = $this->searchActivityQueryPrescriptor($search);
 
-//    public function findOneBySomeField($value): ?Activity
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return array_merge($prescriptor->getResult(), $editor->getResult());
+    }
+
 }

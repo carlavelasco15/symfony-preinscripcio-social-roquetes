@@ -10,14 +10,14 @@
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Activitats</a></li>
-    <li class="breadcrumb-item active">Crear</li>
+    <li class="breadcrumb-item"><a href="{{ path('activity_list_editor') }}">Activitats de l'entitat</a></li>
+    <li class="breadcrumb-item active">Crear activitat</li>
 {% endblock %}
 
 {% block main %}
     {{ parent() }}
     
-<h4 class="border-bottom py-2 mb-4">Crear activitat</h4>
+<h4 class="border-bottom py-2 mb-3">Crear activitat</h4>
 
 <div class="row">
     <div class="col-8">

@@ -1,4 +1,4 @@
-<table class="table table-striped table-hover text-center table-bordered my-3">
+<table class="table table-striped table-hover text-center table-bordered my-2">
     <thead>
         <tr>
             <th class="px-3">Nom</th>
@@ -25,17 +25,44 @@
 
                             {% if waiting is not defined %}   
 
+                                {% if ticketStatus.id == 1 %}
+                                    {# INICI ENVIAR A LA LLISTA #}
+                                    <a href="{{ path('ticket_toggle_ticket_status', {'id': ticket.id}) }}" type="button" class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Confirmar inscripció">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                            <rect x="64" y="64" width="384" height="384" rx="48" ry="48" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"></rect>
+                                        </svg>
+                                        <span>
+                                            Confirmar inscripció
+                                        </span>
+                                    </a>
+                                    {# FI ENVIAR A LA LLISTA #}
+                                {% else %}
+                                    {# INICI ENVIAR A LA LLISTA #}
+                                    <a href="{{ path('ticket_toggle_ticket_status', {'id': ticket.id}) }}" type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M352 176L217.6 336 160 272"></path>
+                                            <rect x="64" y="64" width="384" height="384" rx="48" ry="48" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"></rect>
+                                        </svg>
+                                        <span>
+                                            Inscripció feta
+                                        </span>
+                                    </a>
+                                    {# FI ENVIAR A LA LLISTA #}
+                                {% endif %}
+
+
                                 {# INICI ENVIAR A LA LLISTA #}
-                                <a href="{{ path('ticket_toggle_waiting_list', {'id': ticket.id}) }}" type="button" class="btn btn-danger"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                <a href="{{ path('ticket_toggle_waiting_list', {'id': ticket.id}) }}" type="button" class="btn btn-danger"  data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar a llista d'espera">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/>
                                     </svg>
                                     <span>
-                                        ENVIAR A ESPERA
+                                        Enviar a espera
                                     </span>
                                 </a>
                                 {# FI ENVIAR A LA LLISTA #}
 
+                                
                             {% else %}   
 
                                 {# INICI ENVIAR A LA LLISTA #}
@@ -44,7 +71,7 @@
                                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/>
                                     </svg>
                                     <span>
-                                        AFEGIR A LLISTA
+                                        Afegir a la llista
                                     </span>
                                 </a>
                                 {# FI ENVIAR A LA LLISTA #}

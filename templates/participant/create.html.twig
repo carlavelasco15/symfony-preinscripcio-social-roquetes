@@ -8,14 +8,14 @@
 
 {% block breadcrumbs %}
     {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('activity_list') }}">Participants</a></li>
-    <li class="breadcrumb-item"><a href="{{ path('activity_create') }}">Crear participant</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('activity_list_prescriptor') }}">Participants</a></li>
+    <li class="breadcrumb-item active">Crear participant</li>
 {% endblock %}
 
 {% block main %}
     {{ parent() }}
 
-<h4 class="border-bottom py-2 mb-4">Crear participant</h4>
+<h4 class="border-bottom py-2 mb-3">Crear participant</h4>
     {{ form_start(formulario) }}
 <div class="row justify-content-center my-3">
     <div class="col-8 row">

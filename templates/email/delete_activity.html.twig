@@ -1,0 +1,25 @@
+{% extends 'email.html.twig' %}
+
+{% block title %}Prescripció{% endblock %}
+
+{% block main %}
+
+    <div class="m-3 p-3 bg-white">
+
+    {% set participants = activity.tickets %}
+
+        <h2 class="mb-3">Activitat {{activity.name}} eliminada</h2>
+
+        <p>Hola,</p>
+
+        <p>Us notifiquem que l'activiat d'un dels seus participants ha estat eliminada abans de finalitzar-se (s'acabava el {{activity.endDate|date('d/m/Y')}}):</p>
+
+        <p class="mb-1"><b>Entitat:</b> {{ activity.entity.name }}</p>
+        <p><b>Nom de l'activitat:</b> {{ activity.name }}</p>
+
+       
+        <p>Gràcies.</p>
+
+    </div>
+    
+{% endblock %}

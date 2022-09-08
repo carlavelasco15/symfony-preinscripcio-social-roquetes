@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Participant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @extends ServiceEntityRepository<Participant>
@@ -16,9 +18,17 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ParticipantRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $requestStack, $entityRepository, $userEntityRepository;
+
+    public function __construct(ManagerRegistry $registry,
+                                RequestStack $requestStack,
+                                UserEntityRepository $userEntityRepository,
+                                EntityRepository $entityRepository)
     {
         parent::__construct($registry, Participant::class);
+        $this->requestStack = $requestStack;
+        $this->userEntityRepository = $userEntityRepository;
+        $this->entityRepository = $entityRepository;
     }
 
     public function add(Participant $entity, bool $flush = false): void
@@ -39,28 +49,22 @@ class ParticipantRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Participant[] Returns an array of Participant objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function participantsPerEntity($search): Query {
 
-//    public function findOneBySomeField($value): ?Participant
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if($user_entity_id = $this->requestStack->getSession()->get('user_entity_id')) 
+            $entity_id = $this->userEntityRepository->find($user_entity_id)->getEntity()->getId();
+
+        $consulta = $this->getEntityManager()->createQuery(
+            "SELECT p
+            FROM App\Entity\Participant p
+            WHERE p.".$search->getField()." LIKE :valor
+            AND p.entity = ".$entity_id."
+            ORDER BY p.id ASC")
+
+        ->setParameter('valor', '%'. $search->getValue().'%')
+        ->setMaxResults($search->getLimit());
+
+        return $consulta;
+    }
+
 }

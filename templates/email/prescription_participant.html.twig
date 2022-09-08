@@ -1,0 +1,27 @@
+{% extends 'email.html.twig' %}
+
+{% block title %}Prescripció{% endblock %}
+
+{% block main %}
+
+    <div class="m-3 p-3 bg-white">
+
+        <h2 class="mb-5">Nova prescripció a {{activity.name}}</h2>
+
+        <p>Hola,</p>
+
+        <p>Ha estat inscrit a l'activitat <b>{{activity.name}}</b> que tindrà lloc al centre:</p>
+
+        <p class="mb-1"><b>{{entity.name}}</b></p>
+        <p>{{entity.location}}</p>
+
+        <p>L'activitat s'inicia el dia {{activity.startDate|date('d/m/Y')}} tots els {{activity.schedule}}.</p>
+
+        <p>Recorda que has d'assistir a l'entitat assignada abans de l'inici de l'activitat per fer la inscripció.</p>
+
+
+        <p>Gràcies.</p>
+
+    </div>
+    
+{% endblock %}

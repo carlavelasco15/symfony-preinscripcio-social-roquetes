@@ -51,7 +51,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         // For example:
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        return new RedirectResponse($this->urlGenerator->generate('activity_list'));
+        return new RedirectResponse($this->urlGenerator->generate('user_entities'));
     }
 
     protected function getLoginUrl(Request $request): string

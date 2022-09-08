@@ -14,9 +14,9 @@
 
     <div class="table-responsive overflow-hidden p-1">
            
-    <h4 class="border-bottom py-2 mb-4">{{ participant.name }}</h4>
+    <h4 class="border-bottom py-2 mb-3">{{ participant.name }}</h4>
         
-    <div class="row align-items-end justify-content-between">
+   {#  <div class="row align-items-end justify-content-between">
         <div class="col-3">
             <a href="{{ path('activity_create') }}" id="scroll-up" class="btn btn-primary align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
@@ -34,10 +34,10 @@
     </div>
 
 
-    <div class="text-end">
+    <div class="text-end px-4 mt-1">
         <a href="{{ path('ticket_forget_search') }}">Eliminar filtres</a>
     </div>
-
+ #}
     {% include 'includes/ticket_list_participant.html.twig' %}
 
 

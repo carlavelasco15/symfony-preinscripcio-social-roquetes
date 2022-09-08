@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+    {% block title %}Llista d'activitats per preinscriure {{ parent() }}{% endblock %}
+
+    {% block breadcrumbs %}
+        {{ parent() }}
+        <li class="breadcrumb-item active">Activitats per prescrire</li>
+    {% endblock %}
+
+    {% block main %}
+        {{ parent() }}
+
+            <h4 class="border-bottom py-2 mb-3">Llista d'activitats per prescriure</h4>
+            <div class="row align-items-end justify-content-between">
+                <div class="col-3"></div>
+                <div class="col-7">
+                        {% include 'includes/search.html.twig' %}
+                </div>
+            </div>
+            <div class="text-end px-4 mt-1">
+                <a href="{{ path('activity_forget_search') }}">Eliminar filtres</a>
+            </div>
+
+            {% include 'includes/activity_list.html.twig' %}
+            {%
+                include 'includes/paginator.html.twig' with {
+                    'route' : 'activity_list_prescriptor',
+                    'entidades' : 'activitats'
+                }
+            %}
+                    
+            <script type="text/javascript" src="/js/activity_list.js"></script>             
+    {% endblock %}
+

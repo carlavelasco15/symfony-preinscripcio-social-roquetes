@@ -55,11 +55,6 @@ class Entity
     private $activities;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="equipment")
-     */
-    private $users;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $schedule;
@@ -69,13 +64,22 @@ class Entity
      */
     private $picture;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserEntity::class, mappedBy="entity")
+     */
+    private $userEntities;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Participant::class, mappedBy="entity")
+     */
+    private $participants;
+
     public function __construct()
     {
         $this->activities = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->userEntities = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
-
- 
 
     public function getId(): ?int
     {
@@ -184,33 +188,6 @@ class Entity
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addEquipment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeEquipment($this);
-        }
-
-        return $this;
-    }
-
     public function getSchedule(): ?string
     {
         return $this->schedule;
@@ -234,4 +211,69 @@ class Entity
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, UserEntity>
+     */
+    public function getUserEntities(): Collection
+    {
+        return $this->userEntities;
+    }
+
+    public function addUserEntity(UserEntity $userEntity): self
+    {
+        if (!$this->userEntities->contains($userEntity)) {
+            $this->userEntities[] = $userEntity;
+            $userEntity->setEntity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserEntity(UserEntity $userEntity): self
+    {
+        if ($this->userEntities->removeElement($userEntity)) {
+            // set the owning side to null (unless already changed)
+            if ($userEntity->getEntity() === $this) {
+                $userEntity->setEntity(null);
+            }
+        }
+
+        return $this;
+    }
+/* 
+    public function __toString() {
+        return $this->id;
+    }
+ */
+
+/**
+ * @return Collection<int, Participant>
+ */
+public function getParticipants(): Collection
+{
+    return $this->participants;
+}
+
+public function addParticipant(Participant $participant): self
+{
+    if (!$this->participants->contains($participant)) {
+        $this->participants[] = $participant;
+        $participant->setEntity($this);
+    }
+
+    return $this;
+}
+
+public function removeParticipant(Participant $participant): self
+{
+    if ($this->participants->removeElement($participant)) {
+        // set the owning side to null (unless already changed)
+        if ($participant->getEntity() === $this) {
+            $participant->setEntity(null);
+        }
+    }
+
+    return $this;
+}
 }
